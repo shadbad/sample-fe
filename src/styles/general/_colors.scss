@@ -1,0 +1,27 @@
+:root {
+  --clrCharcoal: #4a4a4a;
+  --clrRed: #c93c3c;
+  --clrGreen: #3c9c3c;
+  --clrBlue: #3c7cc9;
+  --clrPurple: #7c3cc9;
+
+  --clrBlack100: color-mix(in srgb, black 40%, var(--clrCharcoal));
+  --clrBlack200: color-mix(in srgb, black 30%, var(--clrCharcoal));
+  --clrBlack300: color-mix(in srgb, black 20%, var(--clrCharcoal));
+  --clrBlack400: color-mix(in srgb, black 10%, var(--clrCharcoal));
+  --clrBlack500: var(--clrCharcoal);
+  --clrBlack600: color-mix(in srgb, white 20%, var(--clrCharcoal));
+  --clrBlack700: color-mix(in srgb, white 40%, var(--clrCharcoal));
+  --clrBlack800: color-mix(in srgb, white 60%, var(--clrCharcoal));
+  --clrBlack900: color-mix(in srgb, white 80%, var(--clrCharcoal));
+
+  --theme-bg: white;
+  --theme-txt: var(--clrCharcoal);
+
+  --theme-border: var(--clrBlack900);
+  --theme-border-dark: var(--clrBlack700);
+
+  --theme-error: var(--clrRed);
+
+  --theme-button-bg: color-mix(in srgb, white 90%, var(--clrCharcoal));
+}

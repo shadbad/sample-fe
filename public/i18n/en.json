@@ -1,0 +1,54 @@
+{
+  "common": {
+    "appName": "Sample App",
+    "loading": "Loading…",
+    "error": "An error occurred. Please try again.",
+    "retry": "Retry",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "search": "Search",
+    "noResults": "No results found.",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "app": {
+    "welcomeTitle": "Welcome to Sample FE!"
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Log out"
+  },
+  "auth": {
+    "login": "Log in",
+    "logout": "Log out",
+    "email": "Email address",
+    "password": "Password",
+    "forgotPassword": "Forgot your password?",
+    "loginError": "Invalid email or password.",
+    "logoutSuccess": "You have been logged out."
+  },
+  "errors": {
+    "required": "This field is required.",
+    "invalidEmail": "Please enter a valid email address.",
+    "minLength": "Minimum length is {{value}} characters.",
+    "maxLength": "Maximum length is {{value}} characters.",
+    "notFound": "The requested resource was not found.",
+    "serverError": "A server error occurred. Please try again later.",
+    "unauthorized": "You are not authorised to perform this action."
+  },
+  "a11y": {
+    "closeDialog": "Close dialog",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "loading": "Content is loading, please wait."
+  }
+}

@@ -1,0 +1,25 @@
+%wrapper {
+  position: relative;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 0 1rem;
+  width: 100%;
+  max-width: 75rem;
+}
+
+%scrollbar {
+  &::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--theme-bg-darker);
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 0.25rem;
+    background: var(--theme-icon-bg);
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--theme-icon-fg);
+  }
+}

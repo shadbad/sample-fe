@@ -1,0 +1,29 @@
+$cache-buster: 'vu34fb';
+
+@font-face {
+  font-style: normal;
+  font-weight: normal;
+  src: url('/icons/icomoon.eot?#{$cache-buster}');
+  src:
+    url('/icons/icomoon.eot?#{$cache-buster}#iefix') format('embedded-opentype'),
+    url('/icons/icomoon.ttf?#{$cache-buster}') format('truetype'),
+    url('/icons/icomoon.woff?#{$cache-buster}') format('woff'),
+    url('/icons/icomoon.svg?#{$cache-buster}#icomoon') format('svg');
+  font-family: 'icomoon';
+  font-display: block;
+}
+
+[class^='icon-']::before,
+[class*=' icon-']::before {
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  font-family: 'icomoon' !important;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-user:before {
+  content: '\e905';
+}

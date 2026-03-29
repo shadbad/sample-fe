@@ -1,0 +1,54 @@
+{
+  "common": {
+    "appName": "Sample App",
+    "loading": "Wird geladen…",
+    "error": "Ein Fehler ist aufgetreten. Bitte versuche es erneut.",
+    "retry": "Wiederholen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "close": "Schließen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "search": "Suchen",
+    "noResults": "Keine Ergebnisse gefunden.",
+    "yes": "Ja",
+    "no": "Nein"
+  },
+  "app": {
+    "welcomeTitle": "Willkommen bei Sample FE!"
+  },
+  "nav": {
+    "home": "Startseite",
+    "dashboard": "Dashboard",
+    "profile": "Profil",
+    "settings": "Einstellungen",
+    "logout": "Abmelden"
+  },
+  "auth": {
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "email": "E-Mail-Adresse",
+    "password": "Passwort",
+    "forgotPassword": "Passwort vergessen?",
+    "loginError": "Ungültige E-Mail-Adresse oder Passwort.",
+    "logoutSuccess": "Du wurdest erfolgreich abgemeldet."
+  },
+  "errors": {
+    "required": "Dieses Feld ist erforderlich.",
+    "invalidEmail": "Bitte gib eine gültige E-Mail-Adresse ein.",
+    "minLength": "Die Mindestlänge beträgt {{value}} Zeichen.",
+    "maxLength": "Die maximale Länge beträgt {{value}} Zeichen.",
+    "notFound": "Die angeforderte Ressource wurde nicht gefunden.",
+    "serverError": "Ein Serverfehler ist aufgetreten. Bitte versuche es später erneut.",
+    "unauthorized": "Du bist nicht berechtigt, diese Aktion durchzuführen."
+  },
+  "a11y": {
+    "closeDialog": "Dialog schließen",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen",
+    "loading": "Inhalt wird geladen, bitte warten."
+  }
+}
