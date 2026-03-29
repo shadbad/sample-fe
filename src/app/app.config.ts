@@ -1,9 +1,11 @@
 // #region Imports
 import { provideHttpClient } from '@angular/common/http';
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, isDevMode, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideLogConfig } from './core/logging/log-config.token';
+import { LogLevel } from './core/logging/log.model';
 
 import { routes } from './app.routes';
 // #endregion Imports
@@ -33,5 +35,11 @@ export const appConfig: ApplicationConfig = {
       fallbackLang: 'en',
     }),
     // #endregion i18n
+
+    // #region Observability
+    provideLogConfig({
+      minLevel: isDevMode() ? LogLevel.Debug : LogLevel.Warn,
+    }),
+    // #endregion Observability
   ],
 };

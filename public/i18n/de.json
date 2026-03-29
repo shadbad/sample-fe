@@ -49,6 +49,13 @@
     "closeDialog": "Dialog schließen",
     "openMenu": "Menü öffnen",
     "closeMenu": "Menü schließen",
-    "loading": "Inhalt wird geladen, bitte warten."
+    "loading": "Inhalt wird geladen, bitte warten.",
+    "notificationsRegion": "Benachrichtigungen"
+  },
+  "log": {
+    "genericError": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+    "networkError": "Der Server konnte nicht erreicht werden.",
+    "sessionExpired": "Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.",
+    "staleCache": "Daten könnten veraltet sein. Aktualisierung vom Server…"
   }
 }

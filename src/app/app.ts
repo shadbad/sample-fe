@@ -2,16 +2,18 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ToastContainerComponent } from './components/organisms/toast-container/toast-container.component';
 // #endregion Imports
 
 /**
  * Root application component.
  *
- * Acts as the top-level shell: renders the app header and the router outlet.
+ * Acts as the top-level shell: renders the app header, the router outlet,
+ * and the global toast notification container.
  */
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TranslatePipe],
+  imports: [RouterOutlet, TranslatePipe, ToastContainerComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

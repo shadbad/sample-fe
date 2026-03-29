@@ -1,0 +1,62 @@
+// #region Host / Layout
+:host {
+  display: contents;
+}
+// #endregion Host / Layout
+
+// #region BEM Block
+.toast-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-left: 4px solid transparent;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+
+  // #region Level Modifiers
+  &--subtle {
+    border-color: var(--color-neutral);
+    background: var(--color-neutral-subtle);
+  }
+
+  &--info {
+    border-color: var(--color-info);
+    background: var(--color-info-subtle);
+  }
+
+  &--warning {
+    border-color: var(--color-warning);
+    background: var(--color-warning-subtle);
+  }
+
+  &--error {
+    border-color: var(--color-error);
+    background: var(--color-error-subtle);
+  }
+  // #endregion Level Modifiers
+
+  // #region Elements
+  &__message {
+    flex: 1;
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+
+  &__close {
+    opacity: 0.6;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    color: inherit;
+    font-size: 1.25rem;
+    line-height: 1;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+  // #endregion Elements
+}
+// #endregion BEM Block
