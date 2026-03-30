@@ -1,9 +1,11 @@
+// #region Palette — raw colour values, never overridden by themes
 :root {
   --clrCharcoal: #4a4a4a;
   --clrRed: #c93c3c;
   --clrGreen: #3c9c3c;
   --clrBlue: #3c7cc9;
   --clrPurple: #7c3cc9;
+  --clrWarning: #c97a1e;
 
   --clrBlack100: color-mix(in srgb, black 40%, var(--clrCharcoal));
   --clrBlack200: color-mix(in srgb, black 30%, var(--clrCharcoal));
@@ -14,14 +16,98 @@
   --clrBlack700: color-mix(in srgb, white 40%, var(--clrCharcoal));
   --clrBlack800: color-mix(in srgb, white 60%, var(--clrCharcoal));
   --clrBlack900: color-mix(in srgb, white 80%, var(--clrCharcoal));
+}
+// #endregion Palette
 
-  --theme-bg: white;
+// #region Dark Theme Mixin
+// Defined as a mixin so it can be applied to both [data-theme="dark"] and the
+// @media auto-switch selector without duplicating declarations.
+@mixin dark-theme {
+  // #region Surface
+  --theme-bg: var(--clrBlack100);
+  --theme-bg-subtle: var(--clrBlack200);
+  --theme-bg-darker: color-mix(in srgb, black 60%, var(--clrCharcoal));
+  // #endregion Surface
+
+  // #region Text
+  --theme-txt: var(--clrBlack900);
+  --theme-txt-muted: var(--clrBlack800);
+  // #endregion Text
+
+  // #region Border
+  --theme-border: var(--clrBlack400);
+  --theme-border-dark: var(--clrBlack300);
+  // #endregion Border
+
+  // #region Interactive
+  --theme-error: color-mix(in srgb, white 20%, var(--clrRed));
+  --theme-button-bg: var(--clrBlack300);
+  --theme-icon-bg: var(--clrBlack400);
+  --theme-icon-fg: var(--clrBlack700);
+  // #endregion Interactive
+
+  // #region Toast
+  --color-neutral: var(--clrBlack600);
+  --color-neutral-subtle: var(--clrBlack300);
+  --color-info: color-mix(in srgb, white 20%, var(--clrBlue));
+  --color-info-subtle: color-mix(in srgb, var(--clrBlack200) 80%, var(--clrBlue));
+  --color-warning: color-mix(in srgb, white 20%, var(--clrWarning));
+  --color-warning-subtle: color-mix(in srgb, var(--clrBlack200) 80%, var(--clrWarning));
+  --color-error: color-mix(in srgb, white 20%, var(--clrRed));
+  --color-error-subtle: color-mix(in srgb, var(--clrBlack200) 80%, var(--clrRed));
+  // #endregion Toast
+}
+// #endregion Dark Theme Mixin
+
+// #region Light Theme (default)
+:root,
+[data-theme='light'] {
+  // #region Surface
+  --theme-bg: #ffffff;
+  --theme-bg-subtle: var(--clrBlack900);
+  --theme-bg-darker: #f0f0f0;
+  // #endregion Surface
+
+  // #region Text
   --theme-txt: var(--clrCharcoal);
+  --theme-txt-muted: var(--clrBlack700);
+  // #endregion Text
 
+  // #region Border
   --theme-border: var(--clrBlack900);
   --theme-border-dark: var(--clrBlack700);
+  // #endregion Border
 
+  // #region Interactive
   --theme-error: var(--clrRed);
-
   --theme-button-bg: color-mix(in srgb, white 90%, var(--clrCharcoal));
+  --theme-icon-bg: var(--clrBlack800);
+  --theme-icon-fg: var(--clrBlack600);
+  // #endregion Interactive
+
+  // #region Toast
+  --color-neutral: var(--clrBlack700);
+  --color-neutral-subtle: color-mix(in srgb, white 90%, var(--clrCharcoal));
+  --color-info: var(--clrBlue);
+  --color-info-subtle: color-mix(in srgb, white 90%, var(--clrBlue));
+  --color-warning: var(--clrWarning);
+  --color-warning-subtle: color-mix(in srgb, white 90%, var(--clrWarning));
+  --color-error: var(--clrRed);
+  --color-error-subtle: color-mix(in srgb, white 90%, var(--clrRed));
+  // #endregion Toast
 }
+// #endregion Light Theme
+
+// #region Dark Theme (explicit)
+[data-theme='dark'] {
+  @include dark-theme;
+}
+// #endregion Dark Theme
+
+// #region Dark Theme (system auto-switch — no explicit preference set)
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    @include dark-theme;
+  }
+}
+// #endregion Dark Theme (system auto-switch)

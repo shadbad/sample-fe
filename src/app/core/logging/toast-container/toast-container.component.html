@@ -1,0 +1,5 @@
+<div class="toast-container" [attr.aria-label]="'a11y.notificationsRegion' | translate" role="region">
+  @for (toast of toasts(); track toast.id) {
+    <app-toast-item [toast]="toast" (dismissed)="onDismiss($event)" />
+  }
+</div>

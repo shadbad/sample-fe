@@ -1,0 +1,12 @@
+<div [class]="'toast-item--' + toast().level" class="toast-item" aria-live="assertive" aria-atomic="true" role="alert">
+  <span [class]="iconClass()" aria-hidden="true"></span>
+  <p class="toast-item__message">{{ toast().message }}</p>
+  <button
+    class="toast-item__close"
+    [attr.aria-label]="'a11y.closeDialog' | translate"
+    (click)="onDismiss()"
+    type="button"
+  >
+    &times;
+  </button>
+</div>
