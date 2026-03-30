@@ -32,10 +32,6 @@
     background-color: var(--theme-bg-subtle);
   }
 
-  &__header-row {
-    // layout handled by cells
-  }
-
   &__th {
     padding: 0.75rem 1rem;
     color: var(--theme-txt);
@@ -54,12 +50,6 @@
     }
   }
   // #endregion Table Head
-
-  // #region Table Body
-  &__tbody {
-    // rows are projected by the host — no styling imposed here
-  }
-  // #endregion Table Body
 
   // #region Column Label (non-sortable)
   &__col-label {
@@ -94,10 +84,6 @@
       outline-offset: -0.125rem;
       border-radius: 0.25rem;
     }
-  }
-
-  &__sort-label {
-    // inherits from sort-btn
   }
 
   &__sort-icon {
@@ -137,10 +123,6 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-  }
-
-  &__nav-btn {
-    // ButtonComponent host — no extra styles needed
   }
 
   &__pages {
