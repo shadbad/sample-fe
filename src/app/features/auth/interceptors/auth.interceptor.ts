@@ -18,25 +18,30 @@ export const AUTH_RETRY = new HttpContextToken<boolean>(() => false);
 
 // #endregion Skip-Retry Token
 
-// #region URL Skip List
+// #region URL Skip Lists
 
 /**
- * URL substrings for endpoints that must NOT receive an `Authorization` header
- * and must bypass the 401 refresh-retry logic entirely.
+ * URL substrings for endpoints that must **not** receive an `Authorization: Bearer`
+ * header. These are fully public or self-authenticating endpoints.
  *
- * - Login / register: public endpoints, no token needed.
- * - Refresh: self-authenticating via HttpOnly cookie.
- * - Logout: must never trigger a refresh retry; if the server returns 401 the
- *   session is already invalid and retrying would cause an infinite loop.
+ * - Login / register: anonymous endpoints, no session exists yet.
+ * - Refresh: self-authenticating via HttpOnly cookie; sending a (potentially
+ *   expired) Bearer token here would be misleading.
  */
-const SKIP_AUTH_URLS: readonly string[] = [
-  '/auth/login',
-  '/auth/register',
-  '/auth/refresh',
-  '/auth/logout',
-];
+const SKIP_TOKEN_URLS: readonly string[] = ['/auth/login', '/auth/register', '/auth/refresh'];
 
-// #endregion URL Skip List
+/**
+ * URL substrings for endpoints that must **not** trigger the 401 refresh-retry
+ * logic, even when they do carry a Bearer token.
+ *
+ * - Logout: the session is being torn down; retrying with a refreshed token
+ *   would be nonsensical and could cause an infinite loop.
+ * - Refresh: if the refresh endpoint itself returns 401 the session is already
+ *   fully expired — retrying would loop forever.
+ */
+const SKIP_RETRY_URLS: readonly string[] = ['/auth/logout', '/auth/refresh'];
+
+// #endregion URL Skip Lists
 
 // #region Interceptor
 
@@ -45,12 +50,14 @@ const SKIP_AUTH_URLS: readonly string[] = [
  * silent token refresh on `401 Unauthorized` responses.
  *
  * Responsibilities:
- * 1. Attaches `Authorization: Bearer <token>` to all outbound requests
- *    whose URL does not match {@link SKIP_AUTH_URLS}.
+ * 1. Attaches `Authorization: Bearer <token>` to all outbound requests whose
+ *    URL does not match {@link SKIP_TOKEN_URLS}.
  * 2. On `401` from a non-skipped, non-retried request:
  *    a. Calls {@link AuthFacade.refreshToken} once.
  *    b. Retries the original request with the new token (marked as retried).
  * 3. If the refresh fails, calls {@link AuthFacade.logout} and navigates to `/login`.
+ * 4. Requests matching {@link SKIP_RETRY_URLS} still receive the Bearer token
+ *    but are never retried on 401 — this prevents an infinite logout/refresh loop.
  *
  * RxJS JUSTIFIED: `HttpInterceptorFn` must return `Observable<HttpEvent<unknown>>`.
  * No Signal or Promise equivalent exists for the interceptor contract. `switchMap`
@@ -61,25 +68,29 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authFacade = inject(AuthFacade);
   const router = inject(Router);
 
-  // #region Skip Auth Endpoints
-  const shouldSkip = SKIP_AUTH_URLS.some((url) => req.url.includes(url));
-  if (shouldSkip) {
-    return next(req);
-  }
-  // #endregion Skip Auth Endpoints
-
   // #region Attach Token
+  const shouldSkipToken = SKIP_TOKEN_URLS.some((url) => req.url.includes(url));
   const token = authFacade.accessToken();
-  const authedReq = token ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
+  const authedReq =
+    !shouldSkipToken && token
+      ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+      : req;
   // #endregion Attach Token
 
   // #region Handle 401 with One Refresh Retry
+  const shouldSkipRetry = SKIP_RETRY_URLS.some((url) => req.url.includes(url));
   const isRetry = req.context.get(AUTH_RETRY);
 
   return next(authedReq).pipe(
     catchError((error: unknown) => {
-      // Only intercept 401s on non-retry requests
-      if (!(error instanceof HttpErrorResponse) || error.status !== 401 || isRetry) {
+      // Skip retry logic for designated endpoints, already-retried requests,
+      // or non-401 errors.
+      if (
+        shouldSkipRetry ||
+        !(error instanceof HttpErrorResponse) ||
+        error.status !== 401 ||
+        isRetry
+      ) {
         return throwError(() => error);
       }
 
