@@ -3,8 +3,8 @@ import { signal } from '@angular/core';
 import { provideTranslateService } from '@ngx-translate/core';
 import { render, screen } from '@testing-library/angular';
 import { describe, expect, it, vi } from 'vitest';
-import type { ToastEntry } from '../../../core/toast/toast.model';
-import { ToastStore } from '../../../core/toast/toast.store';
+import type { ToastEntry } from '../toast/toast.model';
+import { ToastStore } from '../toast/toast.store';
 import { ToastContainerComponent } from './toast-container.component';
 // #endregion Imports
 

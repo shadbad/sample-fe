@@ -1,8 +1,7 @@
 // #region Imports
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
-import { ToastContainerComponent } from './components/organisms/toast-container/toast-container.component';
+import { ToastContainerComponent } from './core/logging';
 // #endregion Imports
 
 /**
@@ -13,7 +12,7 @@ import { ToastContainerComponent } from './components/organisms/toast-container/
  */
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TranslatePipe, ToastContainerComponent],
+  imports: [RouterOutlet, ToastContainerComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

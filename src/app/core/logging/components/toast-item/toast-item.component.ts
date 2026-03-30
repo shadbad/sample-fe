@@ -1,7 +1,7 @@
 // #region Imports
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import type { ToastEntry } from '../../../../../core/toast/toast.model';
+import type { ToastEntry } from '../../toast/toast.model';
 // #endregion Imports
 
 /**

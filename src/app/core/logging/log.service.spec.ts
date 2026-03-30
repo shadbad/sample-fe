@@ -2,10 +2,10 @@
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ToastStore } from '../toast/toast.store';
 import { LOG_CONFIG } from './log-config.token';
 import { LogLevel } from './log.model';
 import { LogService } from './log.service';
+import { ToastStore } from './toast/toast.store';
 // #endregion Imports
 
 // #region Test Suite

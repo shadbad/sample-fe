@@ -3,7 +3,7 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import type { ToastEntry } from '../../../../../core/toast/toast.model';
+import type { ToastEntry } from '../../../toast/toast.model';
 import { ToastItemComponent } from './toast-item.component';
 // #endregion Imports
 

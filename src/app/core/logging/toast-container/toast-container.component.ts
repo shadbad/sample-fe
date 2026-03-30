@@ -1,7 +1,7 @@
 // #region Imports
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ToastStore } from '../../../core/toast/toast.store';
+import { ToastStore } from '../toast/toast.store';
 import { ToastItemComponent } from './molecules/toast-item/toast-item.component';
 // #endregion Imports
 

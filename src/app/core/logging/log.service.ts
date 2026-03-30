@@ -1,11 +1,11 @@
 // #region Imports
 import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import type { ToastLevel } from '../toast/toast.model';
-import { ToastStore } from '../toast/toast.store';
 import { LOG_CONFIG } from './log-config.token';
 import type { LogEntry } from './log.model';
 import { LogLevel } from './log.model';
+import type { ToastLevel } from './toast/toast.model';
+import { ToastStore } from './toast/toast.store';
 // #endregion Imports
 
 // #region Level Map

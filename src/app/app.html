@@ -1,6 +1,11 @@
+<header class="header">
+  <div class="header-wrapper"></div>
+</header>
+
 <main class="main">
-  <h1>{{ 'app.welcomeTitle' | translate }}</h1>
+  <div class="main-wrapper">
+    <router-outlet />
+  </div>
 </main>
 
-<router-outlet />
 <app-toast-container />
