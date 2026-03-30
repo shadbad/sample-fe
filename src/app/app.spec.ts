@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
@@ -6,8 +7,10 @@ import { App } from './app';
 import { ThemeService } from './core/theme/theme.service';
 import { AuthFacade } from './features/auth';
 
-/** Minimal {@link AuthFacade} stub — only the `logout` method is exercised here. */
+/** Minimal {@link AuthFacade} stub used by AppNavComponent rendered within the app shell. */
 const mockAuthFacade = {
+  /** Simulates an authenticated session so nav links are visible. */
+  isAuthenticated: signal(true),
   /** Resolves immediately without contacting the server. */
   logout: vi.fn().mockResolvedValue(undefined),
 };

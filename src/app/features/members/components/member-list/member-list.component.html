@@ -1,68 +1,70 @@
-<!-- #region Search Bar -->
-<div class="member-list__toolbar">
-  <app-search-bar
-    [placeholder]="'members.search.placeholder' | translate"
-    [value]="facade.searchQuery()"
-    (searchChange)="facade.setSearch($event)"
-  />
-</div>
-<!-- #endregion Search Bar -->
-
-<!-- #region Loading State -->
-@if (facade.isLoading()) {
-  <div class="member-list__loading" [attr.aria-label]="'common.loading' | translate" role="status">
-    <span class="member-list__spinner" aria-hidden="true"></span>
-    <span class="member-list__loading-text">{{ 'common.loading' | translate }}</span>
+<div class="member-list">
+  <!-- #region Search Bar -->
+  <div class="member-list__toolbar">
+    <app-search-bar
+      [placeholder]="'members.search.placeholder' | translate"
+      [value]="facade.searchQuery()"
+      (searchChange)="facade.setSearch($event)"
+    />
   </div>
-}
-<!-- #endregion Loading State -->
+  <!-- #endregion Search Bar -->
 
-<!-- #region Error State -->
-@if (facade.error()) {
-  <p class="member-list__error" role="alert">
-    {{ facade.error() }}
-  </p>
-}
-<!-- #endregion Error State -->
+  <!-- #region Loading State -->
+  @if (facade.isLoading()) {
+    <div class="member-list__loading" [attr.aria-label]="'common.loading' | translate" role="status">
+      <span class="member-list__spinner" aria-hidden="true"></span>
+      <span class="member-list__loading-text">{{ 'common.loading' | translate }}</span>
+    </div>
+  }
+  <!-- #endregion Loading State -->
 
-<!-- #region Member Table via PaginateComponent -->
-@if (!facade.isLoading()) {
-  <app-paginate
-    [columns]="columns"
-    [totalCount]="facade.total()"
-    [page]="facade.currentPage()"
-    [pageSize]="facade.pageSize()"
-    (pageChange)="facade.setPage($event)"
-  >
-    @if (facade.isEmpty()) {
-      <tr>
-        <td class="member-list__empty" colspan="4">
-          {{ 'common.noResults' | translate }}
-        </td>
-      </tr>
-    } @else {
-      @for (member of facade.members(); track member.id) {
-        <tr class="member-list__row">
-          <!-- Avatar -->
-          <td class="member-list__cell member-list__cell--avatar">
-            <span class="member-list__avatar" [attr.aria-label]="member.fullName" aria-hidden="true">
-              {{ getInitials(member) }}
-            </span>
-          </td>
+  <!-- #region Error State -->
+  @if (facade.error()) {
+    <p class="member-list__error" role="alert">
+      {{ facade.error() }}
+    </p>
+  }
+  <!-- #endregion Error State -->
 
-          <!-- Full Name -->
-          <td class="member-list__cell">{{ member.fullName }}</td>
-
-          <!-- Email -->
-          <td class="member-list__cell member-list__cell--email">{{ member.email }}</td>
-
-          <!-- Role -->
-          <td class="member-list__cell">
-            <app-badge [text]="member.role?.name ?? null" [variant]="getRoleVariant(member.role)" />
+  <!-- #region Member Table via PaginateComponent -->
+  @if (!facade.isLoading()) {
+    <app-paginate
+      [columns]="columns"
+      [totalCount]="facade.total()"
+      [page]="facade.currentPage()"
+      [pageSize]="facade.pageSize()"
+      (pageChange)="facade.setPage($event)"
+    >
+      @if (facade.isEmpty()) {
+        <tr>
+          <td class="member-list__empty" colspan="4">
+            {{ 'common.noResults' | translate }}
           </td>
         </tr>
+      } @else {
+        @for (member of facade.members(); track member.id) {
+          <tr class="member-list__row">
+            <!-- Avatar -->
+            <td class="member-list__cell member-list__cell--avatar">
+              <span class="member-list__avatar" [attr.aria-label]="member.fullName" aria-hidden="true">
+                {{ getInitials(member) }}
+              </span>
+            </td>
+
+            <!-- Full Name -->
+            <td class="member-list__cell">{{ member.fullName }}</td>
+
+            <!-- Email -->
+            <td class="member-list__cell member-list__cell--email">{{ member.email }}</td>
+
+            <!-- Role -->
+            <td class="member-list__cell">
+              <app-badge [text]="member.role?.name ?? null" [variant]="getRoleVariant(member.role)" />
+            </td>
+          </tr>
+        }
       }
-    }
-  </app-paginate>
-}
-<!-- #endregion Member Table via PaginateComponent -->
+    </app-paginate>
+  }
+  <!-- #endregion Member Table via PaginateComponent -->
+</div>

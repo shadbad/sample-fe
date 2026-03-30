@@ -1,8 +1,16 @@
 // #region Imports
 import { computed, inject } from '@angular/core';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import type { UserModel } from './models';
 import { AuthService } from './services/auth.service';
+import { TokenStorageService } from './services/token-storage.service';
 // #endregion Imports
 
 // #region JWT Utility
@@ -36,7 +44,7 @@ function extractSubFromJwt(token: string): string | null {
  * Internal state shape for the Auth feature store.
  */
 interface AuthState {
-  /** In-memory JWT access token. `null` when not authenticated. Never persisted to storage. */
+  /** JWT access token. Persisted to `sessionStorage` across page refreshes; cleared on logout. */
   readonly accessToken: string | null;
   /** The currently authenticated user resolved from the API. `null` before login. */
   readonly currentUser: UserModel | null;
@@ -96,6 +104,7 @@ export const AuthFacade = signalStore(
   // #region Methods
   withMethods((store) => {
     const authService = inject(AuthService);
+    const tokenStorage = inject(TokenStorageService);
 
     return {
       /**
@@ -121,6 +130,7 @@ export const AuthFacade = signalStore(
           if (!userId) throw new Error('JWT sub claim missing — cannot resolve current user');
           // Store the token before fetching the user so the interceptor can
           // attach the Bearer header to the GET /users/:id request.
+          tokenStorage.setToken(auth.accessToken);
           patchState(store, { accessToken: auth.accessToken });
           const currentUser = await authService.fetchCurrentUser(userId);
           patchState(store, { currentUser, isLoading: false });
@@ -151,6 +161,7 @@ export const AuthFacade = signalStore(
           if (!userId) throw new Error('JWT sub claim missing — cannot resolve current user');
           // Store the token before fetching the user so the interceptor can
           // attach the Bearer header to the GET /users/:id request.
+          tokenStorage.setToken(auth.accessToken);
           patchState(store, { accessToken: auth.accessToken });
           const currentUser = await authService.fetchCurrentUser(userId);
           patchState(store, { currentUser, isLoading: false });
@@ -172,6 +183,7 @@ export const AuthFacade = signalStore(
       async refreshToken(): Promise<void> {
         try {
           const auth = await authService.refresh();
+          tokenStorage.setToken(auth.accessToken);
           patchState(store, { accessToken: auth.accessToken });
         } catch (err) {
           patchState(store, { error: 'Session expired. Please log in again.' });
@@ -193,11 +205,54 @@ export const AuthFacade = signalStore(
         } catch {
           // Ignore server errors — always clear local state
         } finally {
+          tokenStorage.clearToken();
           patchState(store, initialState);
         }
       },
     };
   }),
   // #endregion Methods
+
+  // #region Lifecycle
+  withHooks((store) => {
+    const tokenStorage = inject(TokenStorageService);
+    const authService = inject(AuthService);
+
+    return {
+      /**
+       * Restores the authenticated session after a page refresh.
+       *
+       * Reads the access token from `sessionStorage`. If a valid token exists,
+       * the JWT `sub` claim is extracted to re-fetch the user profile so that
+       * `currentUser` is populated without requiring a new login.
+       *
+       * If the stored token is malformed or the profile fetch fails (e.g. the
+       * token has since expired), the token is cleared and the store resets to
+       * the unauthenticated state.
+       */
+      onInit(): void {
+        const storedToken = tokenStorage.getToken();
+        if (!storedToken) return;
+
+        const userId = extractSubFromJwt(storedToken);
+        if (!userId) {
+          tokenStorage.clearToken();
+          return;
+        }
+
+        patchState(store, { accessToken: storedToken, isLoading: true });
+
+        void authService.fetchCurrentUser(userId).then(
+          (currentUser) => patchState(store, { currentUser, isLoading: false }),
+          () => {
+            // Token expired or invalid — reset to unauthenticated state
+            tokenStorage.clearToken();
+            patchState(store, { ...initialState });
+          },
+        );
+      },
+    };
+  }),
+  // #endregion Lifecycle
 );
 // #endregion Store

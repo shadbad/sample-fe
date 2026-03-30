@@ -1,16 +1,18 @@
 <!-- Primary navigation containing the Users route link and a Logout button. -->
 <nav class="app-nav" [attr.aria-label]="'header.navAriaLabel' | translate">
-  <ul class="app-nav__list" role="list">
-    <li class="app-nav__item">
-      <app-nav-link href="/users">
-        <span>{{ 'nav.users' | translate }}</span>
-      </app-nav-link>
-    </li>
+  @if (isAuthenticated()) {
+    <ul class="app-nav__list" role="list">
+      <li class="app-nav__item">
+        <app-nav-link href="/users">
+          <span>{{ 'nav.users' | translate }}</span>
+        </app-nav-link>
+      </li>
 
-    <li class="app-nav__item">
-      <button class="app-nav__logout-btn" (click)="onLogout()" type="button">
-        {{ 'nav.logout' | translate }}
-      </button>
-    </li>
-  </ul>
+      <li class="app-nav__item">
+        <button class="app-nav__logout-btn" (click)="onLogout()" type="button">
+          {{ 'nav.logout' | translate }}
+        </button>
+      </li>
+    </ul>
+  }
 </nav>

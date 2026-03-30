@@ -34,6 +34,13 @@ export class AppNavComponent {
 
   // #endregion Dependencies
 
+  // #region State
+
+  /** `true` when the user holds a valid access token (is logged in). */
+  readonly isAuthenticated = this.#authFacade.isAuthenticated;
+
+  // #endregion State
+
   // #region Actions
 
   /**

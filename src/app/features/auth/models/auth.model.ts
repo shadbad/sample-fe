@@ -6,7 +6,7 @@
  * Never persisted to storage.
  */
 export interface AuthModel {
-  /** JWT access token — kept in memory only, never written to storage. */
+  /** JWT access token. Persisted to `sessionStorage` (via {@link TokenStorageService}) across page refreshes. */
   readonly accessToken: string;
   /** Token scheme, typically `'Bearer'`. */
   readonly tokenType: string;
