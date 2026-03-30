@@ -16,8 +16,10 @@ export interface MembersConfig {
   /**
    * Available role options shown in the create/edit member form.
    *
-   * Until a `GET /roles` endpoint exists, these are configured statically
-   * by the host application. Each entry maps a backend UUID to a display name.
+   * Configured statically by the host application; each entry maps a backend
+   * UUID to a display name. The backend exposes `GET /roles` to retrieve the
+   * full list at runtime — replace this static array with a dynamic fetch when
+   * the feature warrants it.
    */
   readonly roles: readonly { readonly id: string; readonly name: string }[];
 }

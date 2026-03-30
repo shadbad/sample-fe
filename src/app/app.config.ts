@@ -40,11 +40,8 @@ export const appConfig: ApplicationConfig = {
     // #region Members
     provideMembersConfig({
       apiBase: environment.apiBase,
-      // TODO: replace with dynamic GET /roles once the endpoint is available
-      roles: [
-        { id: '00000000-0000-0000-0000-000000000001', name: 'admin' },
-        { id: '00000000-0000-0000-0000-000000000002', name: 'user' },
-      ],
+      // TODO: replace with dynamic GET /roles fetch — endpoint available at GET /roles
+      roles: [{ id: '82643745-f3f0-440f-885a-d9b88d0f3d18', name: 'admin' }],
     }),
     // #endregion Members
 

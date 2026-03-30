@@ -1,14 +1,32 @@
 @use 'styles/general/common' as common;
 
+// #region Main Layout
+/// Root content wrapper. Clears the two 3rem fixed bars (header + footer) via
+/// padding so that flex children receive the correct definite height and
+/// `flex: 1` on `.main__inner` reliably fills the visible viewport.
 .main {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  box-sizing: border-box;
+  background-color: var(--theme-bg);
+  padding-top: 3rem; // clears fixed header
+  padding-bottom: 3rem; // clears fixed footer
+  min-height: 100dvh;
 }
+// #endregion Main Layout
 
+// #region Main Inner
+/// Constrained content column. `flex: 1` stretches it to fill `.main` even
+/// when the routed page content is shorter than the remaining viewport.
 .main__inner {
   @include common.wrapper;
 
+  display: flex;
   flex: 1;
-  padding: 3.5rem 0;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 1.5rem 0;
+  min-height: calc(100vh - 7rem);
 }
+// #endregion Main Inner
