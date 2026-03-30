@@ -1,0 +1,16 @@
+<!-- Primary navigation containing the Users and Logout links. -->
+<nav class="app-nav" [attr.aria-label]="'header.navAriaLabel' | translate">
+  <ul class="app-nav__list" role="list">
+    <li class="app-nav__item">
+      <app-nav-link href="/users">
+        <span>{{ 'nav.users' | translate }}</span>
+      </app-nav-link>
+    </li>
+
+    <li class="app-nav__item">
+      <app-nav-link href="/logout">
+        <span>{{ 'nav.logout' | translate }}</span>
+      </app-nav-link>
+    </li>
+  </ul>
+</nav>

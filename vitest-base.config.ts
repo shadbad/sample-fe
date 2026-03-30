@@ -1,4 +1,5 @@
 // #region Imports
+import { resolve } from 'path';
 import { defineConfig } from 'vitest/config';
 // #endregion Imports
 
@@ -14,6 +15,21 @@ import { defineConfig } from 'vitest/config';
  * @see https://vitest.dev/config/
  */
 export default defineConfig({
+  resolve: {
+    // #region Path Aliases
+    /**
+     * Mirror the TypeScript `paths` entries from `tsconfig.json` so Vitest can
+     * resolve `@components/*`, `@features/*`, and `@models` at test time.
+     */
+    alias: {
+      '@components/atoms': resolve(__dirname, 'src/app/components/atoms/index.ts'),
+      '@components/molecules': resolve(__dirname, 'src/app/components/molecules/index.ts'),
+      '@components/organisms': resolve(__dirname, 'src/app/components/organisms/index.ts'),
+      '@components/templates': resolve(__dirname, 'src/app/components/templates/index.ts'),
+      '@models': resolve(__dirname, 'src/app/models/index.ts'),
+    },
+    // #endregion Path Aliases
+  },
   test: {
     // #region Reporters
     /**

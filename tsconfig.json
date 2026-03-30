@@ -13,7 +13,16 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@components/atoms": ["src/app/components/atoms/index.ts"],
+      "@components/molecules": ["src/app/components/molecules/index.ts"],
+      "@components/organisms": ["src/app/components/organisms/index.ts"],
+      "@components/templates": ["src/app/components/templates/index.ts"],
+      "@features/*": ["src/app/features/*/index.ts"],
+      "@models": ["src/app/models/index.ts"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

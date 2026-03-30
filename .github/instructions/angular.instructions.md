@@ -301,18 +301,59 @@ export class UserProfileComponent {
 
 ---
 
-## 6. i18n
+## 6. i18n \u2014 ngx-translate
 
-- Every user-visible string uses the `i18n` attribute or `$localize` tagged template.
-- Translation IDs follow `@@feature.component.key`.
+This project uses **`ngx-translate`** exclusively. Angular's built-in compiler i18n is **forbidden**.
+
+| Forbidden                                            | Reason                                                           |
+| ---------------------------------------------------- | ---------------------------------------------------------------- |
+| `i18n="..."` attribute                               | Angular compiler pipeline \u2014 incompatible with ngx-translate |
+| `i18n-*` attribute variants (e.g. `i18n-aria-label`) | Same reason                                                      |
+| `$localize`                                          | Same reason                                                      |
+| Hard-coded display strings                           | Every user-visible string must go through the translate pipe     |
+
+### Template rules
 
 ```html
-<!-- ✅ Correct -->
-<h1 i18n="@@dashboard.welcome.title">Welcome back</h1>
-<p i18n="@@dashboard.welcome.subtitle">Here is your overview.</p>
+<!-- \u2705 Plain text node -->
+<span>{{ 'nav.users' | translate }}</span>
+
+<!-- \u2705 Interpolated parameter -->
+<p>{{ 'footer.copyright' | translate: { year: currentYear } }}</p>
+
+<!-- \u2705 Attribute binding \u2014 aria, title, placeholder \u2026 -->
+<nav [attr.aria-label]="'header.navAriaLabel' | translate">
+  <!-- \u274c Forbidden \u2014 Angular built-in i18n -->
+  <h1 i18n="@@dashboard.welcome.title">Welcome back</h1>
+
+  <!-- \u274c Forbidden \u2014 i18n-* variant -->
+  <nav i18n-aria-label="@@header.navAriaLabel" aria-label="Main navigation">
+    <!-- \u274c Forbidden \u2014 hardcoded string -->
+    <span>Users</span>
+  </nav>
+</nav>
 ```
 
+### Component setup
+
+Always add `TranslatePipe` to the component\u2019s `imports` array. Never rely on a shared module.
+
 ```ts
-// ✅ Correct — programmatic string
-const label = $localize`:@@shared.form.required:Required`;
+@Component({
+  selector: 'app-nav',
+  standalone: true,
+  imports: [TranslatePipe],   // \u2190 mandatory whenever the template uses | translate
+  \u2026
+})
+export class AppNavComponent {}
+```
+
+### Programmatic translation
+
+```ts
+// \u2705 Synchronous \u2014 safe inside effects / event handlers (translations already loaded)
+const label = this.#translate.instant('common.close');
+
+// \u274c Forbidden \u2014 raw string
+const label = 'Close';
 ```

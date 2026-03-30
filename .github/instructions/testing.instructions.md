@@ -303,7 +303,52 @@ it('loads data on init', fakeAsync(() => {
 
 ---
 
-## 8. Coverage Targets
+## 8. Testing Components with `TranslatePipe`
+
+Any component that uses `{{ 'key' | translate }}` or `[attr.x]="'key' | translate"` requires
+`TranslateService` to be configured **before** assertions run. Use the following pattern:
+
+```ts
+import { TestBed } from '@angular/core/testing';
+import { TranslateService, provideTranslateService } from '@ngx-translate/core';
+import { render, screen } from '@testing-library/angular';
+
+/** Only the keys actually used by this component — keep it minimal. */
+const EN = {
+  header: { navAriaLabel: 'Main navigation' },
+  nav: { users: 'Users', logout: 'Log out' },
+};
+
+async function setup(): Promise<void> {
+  // 1. Render with the translate provider (no HTTP loader needed in tests).
+  const { fixture } = await render(AppNavComponent, {
+    providers: [provideRouter([]), provideTranslateService()],
+  });
+
+  // 2. Load translations synchronously — avoids async HTTP calls.
+  const translate = TestBed.inject(TranslateService);
+  translate.setTranslation('en', EN);
+  translate.use('en');
+
+  // 3. Run one extra change-detection cycle so the impure TranslatePipe
+  //    picks up the new translations before assertions run.
+  fixture.detectChanges();
+  await fixture.whenStable();
+}
+```
+
+### Rules
+
+| Rule                                                   | Detail                                                   |
+| ------------------------------------------------------ | -------------------------------------------------------- |
+| Always use `provideTranslateService()`                 | Required for any component that imports `TranslatePipe`. |
+| Always call `setTranslation` + `use` + `detectChanges` | Makes the impure pipe resolve synchronously.             |
+| Provide only the keys the component actually uses      | Keeps test fixtures narrow and readable.                 |
+| Use `getByRole` / `getByText` after `setup()`          | Translations are resolved; `findBy*` is unnecessary.     |
+
+---
+
+## 9. Coverage Targets
 
 | Layer                   | Target                                    |
 | ----------------------- | ----------------------------------------- |

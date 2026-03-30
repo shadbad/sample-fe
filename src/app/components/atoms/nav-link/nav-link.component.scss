@@ -1,0 +1,36 @@
+// #region Host / Layout
+:host {
+  display: contents;
+}
+// #endregion Host / Layout
+
+// #region BEM — nav-link
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+  outline-offset: 0.125rem;
+  border-radius: var(--radius-md);
+  padding: var(--space-1) var(--space-3);
+  color: var(--theme-txt-muted);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  text-decoration: none;
+
+  &:hover {
+    background-color: var(--theme-bg-subtle);
+    color: var(--theme-txt);
+  }
+
+  &:focus-visible {
+    outline: 0.125rem solid var(--clrBlue);
+  }
+
+  &--active {
+    color: var(--theme-txt);
+    font-weight: var(--font-weight-semibold);
+  }
+}
+// #endregion BEM — nav-link

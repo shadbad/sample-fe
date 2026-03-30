@@ -1,6 +1,7 @@
 // #region Imports
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { FooterComponent, HeaderComponent } from '@components/organisms';
 import { ToastContainerComponent } from './core/logging';
 import { ThemeService } from './core/theme';
 // #endregion Imports
@@ -16,7 +17,7 @@ import { ThemeService } from './core/theme';
  */
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ToastContainerComponent],
+  imports: [RouterOutlet, ToastContainerComponent, HeaderComponent, FooterComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

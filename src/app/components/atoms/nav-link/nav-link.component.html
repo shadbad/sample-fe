@@ -1,0 +1,9 @@
+<!-- RouterLinkActive adds the BEM modifier when the route is active. -->
+<a
+  class="nav-link"
+  [routerLink]="href()"
+  [routerLinkActiveOptions]="{ exact: false }"
+  routerLinkActive="nav-link--active"
+>
+  <ng-content />
+</a>

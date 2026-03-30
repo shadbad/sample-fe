@@ -30,7 +30,11 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles/main.scss"]
+            "styles": ["src/styles/main.scss"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["src"]
+            },
+            "polyfills": ["@angular/localize/init"]
           },
           "configurations": {
             "production": {

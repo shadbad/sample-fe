@@ -20,12 +20,20 @@
   "app": {
     "welcomeTitle": "Willkommen bei Sample FE!"
   },
+  "header": {
+    "logoAriaLabel": "Zur Startseite",
+    "navAriaLabel": "Hauptnavigation"
+  },
   "nav": {
     "home": "Startseite",
     "dashboard": "Dashboard",
     "profile": "Profil",
     "settings": "Einstellungen",
+    "users": "Benutzer",
     "logout": "Abmelden"
+  },
+  "footer": {
+    "copyright": "© {{year}} Sample App. Alle Rechte vorbehalten."
   },
   "auth": {
     "login": "Anmelden",

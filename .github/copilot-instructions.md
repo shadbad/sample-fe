@@ -213,13 +213,142 @@ Always prefer these APIs over older alternatives:
 
 ---
 
-## Internationalisation (i18n)
+## Internationalisation (i18n) — ngx-translate
 
-Supported locales: **en**, **de**.
+Supported locales: **en**, **de**. This project uses **`ngx-translate`** (`@ngx-translate/core`) —
+not Angular's built-in `i18n` compiler pipeline. The two systems are mutually exclusive; using
+Angular's `i18n` attribute or `$localize` is **forbidden**.
 
-- All user-visible strings go through Angular's built-in `i18n` attribute or `$localize`.
-- Never hard-code display strings in templates or components.
-- Translation IDs follow the pattern `@@feature.component.key`.
+### Rules
+
+| Rule                            | Detail                                                                         |
+| ------------------------------- | ------------------------------------------------------------------------------ |
+| Never hard-code display strings | Every user-visible string must go through the translate pipe or service.       |
+| No `i18n` attribute             | Angular compiler i18n is **forbidden** in this project.                        |
+| No `$localize`                  | Same reason — incompatible with ngx-translate.                                 |
+| No `i18n-*` attribute variants  | e.g. `i18n-aria-label` is forbidden. Use `[attr.aria-label]` instead.          |
+| Always import `TranslatePipe`   | Add it to the component's `imports: []` array — never rely on a shared module. |
+
+### Translation files
+
+Files live at `public/i18n/{lang}.json` and are loaded at runtime via `TranslateHttpLoader`.
+Add keys to **both** `en.json` and `de.json` whenever a new string is introduced.
+
+```
+public/i18n/
+├── en.json   ← English (default)
+└── de.json   ← German
+```
+
+### Key naming convention
+
+Keys are **dot-separated** and grouped by domain/component. Use camelCase for leaf names.
+
+```
+<domain>.<group>.<key>
+```
+
+```json
+// en.json (add the same key+structure to de.json)
+{
+  "header": {
+    "logoAriaLabel": "Go to home page",
+    "navAriaLabel": "Main navigation"
+  },
+  "nav": {
+    "users": "Users",
+    "logout": "Log out"
+  },
+  "footer": {
+    "copyright": "© {{year}} Sample App. All rights reserved."
+  }
+}
+```
+
+### Template usage
+
+```html
+<!-- ✅ Plain text node -->
+<span>{{ 'nav.users' | translate }}</span>
+
+<!-- ✅ Interpolated parameters -->
+<p>{{ 'footer.copyright' | translate: { year: currentYear } }}</p>
+
+<!-- ✅ Attribute binding (aria, title, placeholder …) -->
+<nav [attr.aria-label]="'header.navAriaLabel' | translate">
+  <!-- ✅ Input binding -->
+  <app-tooltip [text]="'common.loading' | translate" />
+
+  <!-- ❌ Forbidden — Angular built-in i18n -->
+  <span i18n="@@nav.users">Users</span>
+
+  <!-- ❌ Forbidden — hardcoded string -->
+  <span>Users</span>
+
+  <!-- ❌ Forbidden — i18n-* attribute variant -->
+  <nav aria-label="Main navigation" i18n-aria-label="@@header.navAriaLabel"></nav>
+</nav>
+```
+
+### TypeScript component setup
+
+```ts
+// ✅ Required — always add TranslatePipe to the component's imports array
+@Component({
+  selector: 'app-nav',
+  standalone: true,
+  imports: [NavLinkComponent, TranslatePipe], // ← mandatory
+  templateUrl: './app-nav.component.html',
+  styleUrl: './app-nav.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class AppNavComponent {}
+```
+
+### Programmatic translation (TypeScript)
+
+Use `TranslateService.instant()` for synchronous access (only after translations are loaded)
+or `TranslateService.get()` for a Promise.
+
+```ts
+// ✅ Correct — synchronous (safe inside effects / event handlers)
+const label = this.#translate.instant('common.close');
+
+// ✅ Correct — async
+const label = await this.#translate.get('common.close').toPromise();
+
+// ❌ Forbidden — raw string
+const label = 'Close';
+```
+
+### Testing — loading translations in specs
+
+Use `provideTranslateService()` as a provider, then call
+`translate.setTranslation` + `translate.use` + `fixture.detectChanges()` synchronously
+after render so the impure `TranslatePipe` resolves before assertions.
+
+```ts
+import { TestBed } from '@angular/core/testing';
+import { TranslateService, provideTranslateService } from '@ngx-translate/core';
+import { render, screen } from '@testing-library/angular';
+
+/** Minimal translations for this component. */
+const EN = { nav: { users: 'Users', logout: 'Log out' } };
+
+async function setup(): Promise<void> {
+  const { fixture } = await render(AppNavComponent, {
+    providers: [provideRouter([]), provideTranslateService()],
+  });
+
+  // Load translations synchronously so the impure TranslatePipe
+  // picks them up in the very next detectChanges cycle.
+  const translate = TestBed.inject(TranslateService);
+  translate.setTranslation('en', EN);
+  translate.use('en');
+  fixture.detectChanges();
+  await fixture.whenStable();
+}
+```
 
 ---
 
@@ -235,14 +364,14 @@ Supported locales: **en**, **de**.
 
 ## Project Stack Snapshot
 
-| Concern   | Choice                                      |
-| --------- | ------------------------------------------- |
-| Framework | Angular 19+ (Standalone, Zoneless)          |
-| Language  | TypeScript (strict mode)                    |
-| Styling   | SCSS + BEM                                  |
-| State     | NgRx Signal Store                           |
-| Testing   | Vitest + Angular Testing Library            |
-| Auth      | JWT Bearer (`@nestjs/jwt` + `passport-jwt`) |
-| i18n      | `en`, `de`                                  |
-| Linter    | ESLint (Angular ESLint)                     |
-| Formatter | Prettier                                    |
+| Concern   | Choice                                             |
+| --------- | -------------------------------------------------- |
+| Framework | Angular 19+ (Standalone, Zoneless)                 |
+| Language  | TypeScript (strict mode)                           |
+| Styling   | SCSS + BEM                                         |
+| State     | NgRx Signal Store                                  |
+| Testing   | Vitest + Angular Testing Library                   |
+| Auth      | JWT Bearer (`@nestjs/jwt` + `passport-jwt`)        |
+| i18n      | ngx-translate (`@ngx-translate/core`) — `en`, `de` |
+| Linter    | ESLint (Angular ESLint)                            |
+| Formatter | Prettier                                           |
