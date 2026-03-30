@@ -1,13 +1,6 @@
 // #region Imports
 import { computed, inject } from '@angular/core';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import type { UserModel } from './models';
 import { AuthService } from './services/auth.service';
 import { TokenStorageService } from './services/token-storage.service';
@@ -34,6 +27,27 @@ function extractSubFromJwt(token: string): string | null {
     return typeof payload['sub'] === 'string' ? payload['sub'] : null;
   } catch {
     return null;
+  }
+}
+
+/**
+ * Returns `true` when the JWT's `exp` claim is in the past or missing.
+ *
+ * @param token - A compact JWT string (`header.payload.signature`).
+ * @returns `true` if the token is expired or malformed, `false` otherwise.
+ */
+function isJwtExpired(token: string): boolean {
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return true;
+    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const payload = JSON.parse(atob(base64)) as Record<string, unknown>;
+    const exp = payload['exp'];
+    if (typeof exp !== 'number') return true;
+    // `exp` is in seconds; Date.now() is in milliseconds
+    return Date.now() >= exp * 1000;
+  } catch {
+    return true;
   }
 }
 
@@ -209,30 +223,55 @@ export const AuthFacade = signalStore(
           patchState(store, initialState);
         }
       },
-    };
-  }),
-  // #endregion Methods
 
-  // #region Lifecycle
-  withHooks((store) => {
-    const tokenStorage = inject(TokenStorageService);
-    const authService = inject(AuthService);
-
-    return {
       /**
-       * Restores the authenticated session after a page refresh.
+       * Silently restores the authenticated session on application startup.
        *
-       * Reads the access token from `sessionStorage`. If a valid token exists,
-       * the JWT `sub` claim is extracted to re-fetch the user profile so that
-       * `currentUser` is populated without requiring a new login.
+       * Strategy (in priority order):
+       * 1. **Cookie-based silent refresh** — calls `POST /auth/refresh` with the
+       *    `HttpOnly` refresh-token cookie. Succeeds even when the access token
+       *    has expired or when `sessionStorage` was cleared (e.g. browser restart).
+       * 2. **sessionStorage fallback** — if the cookie refresh fails, reads the
+       *    stored access token and only uses it when it has not yet expired.
+       * 3. **Unauthenticated** — if both strategies fail the store remains in its
+       *    initial state and the user must log in manually.
        *
-       * If the stored token is malformed or the profile fetch fails (e.g. the
-       * token has since expired), the token is cleared and the store resets to
-       * the unauthenticated state.
+       * This method is registered with `provideAppInitializer` in `app.config.ts`
+       * so the Angular router **waits** for it to resolve before processing the
+       * first navigation. This prevents the `authGuard` from evaluating against
+       * a transiently-empty auth state and incorrectly redirecting to `/login`.
+       *
+       * @returns A `Promise` that always resolves (never rejects) once session
+       *          restoration is complete.
        */
-      onInit(): void {
+      async initSession(): Promise<void> {
+        // --- Strategy 1: cookie-based silent refresh ---------------------------
+        try {
+          const auth = await authService.refresh();
+          tokenStorage.setToken(auth.accessToken);
+          patchState(store, { accessToken: auth.accessToken });
+
+          const userId = extractSubFromJwt(auth.accessToken);
+          if (userId) {
+            try {
+              const currentUser = await authService.fetchCurrentUser(userId);
+              patchState(store, { currentUser });
+            } catch {
+              // Token is valid but profile fetch failed — remain authenticated
+              // without a profile; the interceptor will handle further 401s.
+            }
+          }
+          return; // Strategy 1 complete — do not fall through to Strategy 2
+        } catch {
+          // Refresh cookie absent or expired — try sessionStorage fallback
+        }
+
+        // --- Strategy 2: non-expired sessionStorage token ----------------------
         const storedToken = tokenStorage.getToken();
-        if (!storedToken) return;
+        if (!storedToken || isJwtExpired(storedToken)) {
+          tokenStorage.clearToken();
+          return; // remain unauthenticated
+        }
 
         const userId = extractSubFromJwt(storedToken);
         if (!userId) {
@@ -240,19 +279,18 @@ export const AuthFacade = signalStore(
           return;
         }
 
-        patchState(store, { accessToken: storedToken, isLoading: true });
-
-        void authService.fetchCurrentUser(userId).then(
-          (currentUser) => patchState(store, { currentUser, isLoading: false }),
-          () => {
-            // Token expired or invalid — reset to unauthenticated state
-            tokenStorage.clearToken();
-            patchState(store, { ...initialState });
-          },
-        );
+        try {
+          patchState(store, { accessToken: storedToken });
+          const currentUser = await authService.fetchCurrentUser(userId);
+          patchState(store, { currentUser });
+        } catch {
+          // Token was not accepted by the server — reset to unauthenticated
+          tokenStorage.clearToken();
+          patchState(store, { ...initialState });
+        }
       },
     };
   }),
-  // #endregion Lifecycle
+  // #endregion Methods
 );
 // #endregion Store

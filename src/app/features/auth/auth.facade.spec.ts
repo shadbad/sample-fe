@@ -13,8 +13,8 @@ import { TokenStorageService } from './services/token-storage.service';
 /**
  * Creates a minimal test JWT with the given `sub` (user ID) claim.
  *
- * Uses `btoa` (available in jsdom) to produce a realistic base64url payload
- * that the facade's `extractSubFromJwt` utility can parse.
+ * Includes a far-future `exp` (year 2099) so that the facade's `isJwtExpired`
+ * utility treats the token as valid.
  *
  * @param sub - The subject (user ID) to embed in the JWT payload.
  * @returns A compact JWT string (`header.payload.fake-sig`).
@@ -23,8 +23,26 @@ function makeTestJwt(sub: string): string {
   const toBase64Url = (str: string): string =>
     btoa(str).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
 
+  const exp = Math.floor(new Date('2099-01-01').getTime() / 1000);
   const header = toBase64Url('{"alg":"none"}');
-  const payload = toBase64Url(`{"sub":"${sub}","email":"test@example.com"}`);
+  const payload = toBase64Url(JSON.stringify({ sub, email: 'test@example.com', exp }));
+  return `${header}.${payload}.test-sig`;
+}
+
+/**
+ * Creates a test JWT whose `exp` claim is set in the past (year 2000),
+ * causing `isJwtExpired` to return `true`.
+ *
+ * @param sub - The subject (user ID) to embed in the JWT payload.
+ * @returns A compact JWT string (`header.payload.fake-sig`).
+ */
+function makeExpiredTestJwt(sub: string): string {
+  const toBase64Url = (str: string): string =>
+    btoa(str).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+
+  const exp = Math.floor(new Date('2000-01-01').getTime() / 1000);
+  const header = toBase64Url('{"alg":"none"}');
+  const payload = toBase64Url(JSON.stringify({ sub, email: 'test@example.com', exp }));
   return `${header}.${payload}.test-sig`;
 }
 
@@ -385,44 +403,89 @@ describe('AuthFacade', () => {
   });
   // #endregion logout()
 
-  // #region onInit — session restore
-  describe('onInit (session restore)', () => {
-    it('restores accessToken and currentUser from a stored token', async () => {
+  // #region initSession() — session restore
+  describe('initSession()', () => {
+    it('restores session via cookie-based token refresh', async () => {
       const jwt = makeTestJwt('test-user-id');
+      mockAuthService.refresh.mockResolvedValue({
+        accessToken: jwt,
+        tokenType: 'Bearer',
+        expiresIn: 3600,
+      });
+      mockAuthService.fetchCurrentUser.mockResolvedValue(TEST_USER);
+
+      const facade = TestBed.inject(AuthFacade);
+      await TestBed.runInInjectionContext(() => facade.initSession());
+
+      expect(facade.accessToken()).toBe(jwt);
+      expect(facade.currentUser()).toEqual(TEST_USER);
+      expect(facade.isAuthenticated()).toBe(true);
+      expect(mockTokenStorage.setToken).toHaveBeenCalledWith(jwt);
+    });
+
+    it('falls back to a non-expired sessionStorage token when cookie refresh fails', async () => {
+      const jwt = makeTestJwt('test-user-id');
+      mockAuthService.refresh.mockRejectedValue(new Error('No cookie'));
       mockTokenStorage.getToken.mockReturnValue(jwt);
       mockAuthService.fetchCurrentUser.mockResolvedValue(TEST_USER);
 
       const facade = TestBed.inject(AuthFacade);
-      // Allow the async fetchCurrentUser triggered by onInit to complete
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await TestBed.runInInjectionContext(() => facade.initSession());
 
       expect(facade.accessToken()).toBe(jwt);
       expect(facade.currentUser()).toEqual(TEST_USER);
       expect(facade.isAuthenticated()).toBe(true);
     });
 
-    it('clears the stored token and stays unauthenticated when the profile fetch fails', async () => {
-      const jwt = makeTestJwt('test-user-id');
-      mockTokenStorage.getToken.mockReturnValue(jwt);
-      mockAuthService.fetchCurrentUser.mockRejectedValue(new Error('Unauthorized'));
+    it('stays unauthenticated when cookie refresh fails and sessionStorage token is expired', async () => {
+      const expiredJwt = makeExpiredTestJwt('test-user-id');
+      mockAuthService.refresh.mockRejectedValue(new Error('No cookie'));
+      mockTokenStorage.getToken.mockReturnValue(expiredJwt);
 
       const facade = TestBed.inject(AuthFacade);
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await TestBed.runInInjectionContext(() => facade.initSession());
 
       expect(facade.accessToken()).toBeNull();
       expect(facade.isAuthenticated()).toBe(false);
       expect(mockTokenStorage.clearToken).toHaveBeenCalled();
     });
 
-    it('ignores a malformed stored token and clears storage', () => {
+    it('stays unauthenticated when both cookie refresh and sessionStorage are unavailable', async () => {
+      mockAuthService.refresh.mockRejectedValue(new Error('No cookie'));
+      mockTokenStorage.getToken.mockReturnValue(null);
+
+      const facade = TestBed.inject(AuthFacade);
+      await TestBed.runInInjectionContext(() => facade.initSession());
+
+      expect(facade.accessToken()).toBeNull();
+      expect(facade.isAuthenticated()).toBe(false);
+    });
+
+    it('clears state when the sessionStorage fallback token is rejected by the server', async () => {
+      const jwt = makeTestJwt('test-user-id');
+      mockAuthService.refresh.mockRejectedValue(new Error('No cookie'));
+      mockTokenStorage.getToken.mockReturnValue(jwt);
+      mockAuthService.fetchCurrentUser.mockRejectedValue(new Error('Unauthorized'));
+
+      const facade = TestBed.inject(AuthFacade);
+      await TestBed.runInInjectionContext(() => facade.initSession());
+
+      expect(facade.accessToken()).toBeNull();
+      expect(facade.isAuthenticated()).toBe(false);
+      expect(mockTokenStorage.clearToken).toHaveBeenCalled();
+    });
+
+    it('ignores a malformed sessionStorage token and clears storage', async () => {
+      mockAuthService.refresh.mockRejectedValue(new Error('No cookie'));
       mockTokenStorage.getToken.mockReturnValue('not.a.valid.jwt.at.all.extra');
 
       const facade = TestBed.inject(AuthFacade);
+      await TestBed.runInInjectionContext(() => facade.initSession());
 
       expect(facade.accessToken()).toBeNull();
       expect(mockTokenStorage.clearToken).toHaveBeenCalled();
     });
   });
-  // #endregion onInit — session restore
+  // #endregion initSession() — session restore
 });
 // #endregion Test Suite

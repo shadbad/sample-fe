@@ -1,9 +1,15 @@
 // #region Imports
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig, isDevMode, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {
+  ApplicationConfig,
+  inject,
+  isDevMode,
+  provideAppInitializer,
+  provideBrowserGlobalErrorListeners,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { environment } from '@env';
-import { authInterceptor, provideAuthConfig } from '@features/auth';
+import { AuthFacade, authInterceptor, provideAuthConfig } from '@features/auth';
 import { provideMembersConfig } from '@features/members';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -32,6 +38,7 @@ export const appConfig: ApplicationConfig = {
     // #endregion Core
 
     // #region Auth
+    provideAppInitializer(() => inject(AuthFacade).initSession()),
     provideAuthConfig({
       apiBase: environment.apiBase,
     }),
