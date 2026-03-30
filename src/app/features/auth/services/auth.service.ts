@@ -35,7 +35,11 @@ export class AuthService {
    */
   async login(email: string, password: string): Promise<AuthModel> {
     const response = await firstValueFrom(
-      this.#http.post<AuthResponseDto>(`${this.#config.apiBase}/auth/login`, { email, password }),
+      this.#http.post<AuthResponseDto>(
+        `${this.#config.apiBase}/auth/login`,
+        { email, password },
+        { withCredentials: true },
+      ),
     );
     if (!isAuthDto(response.data)) {
       throw new TypeError('Unexpected shape for auth login response');
@@ -57,11 +61,11 @@ export class AuthService {
    */
   async register(fullName: string, email: string, password: string): Promise<AuthModel> {
     const response = await firstValueFrom(
-      this.#http.post<AuthResponseDto>(`${this.#config.apiBase}/auth/register`, {
-        fullName,
-        email,
-        password,
-      }),
+      this.#http.post<AuthResponseDto>(
+        `${this.#config.apiBase}/auth/register`,
+        { fullName, email, password },
+        { withCredentials: true },
+      ),
     );
     if (!isAuthDto(response.data)) {
       throw new TypeError('Unexpected shape for auth register response');
@@ -99,7 +103,9 @@ export class AuthService {
    * @throws When the server returns a non-2xx response.
    */
   async logout(): Promise<void> {
-    await firstValueFrom(this.#http.post<void>(`${this.#config.apiBase}/auth/logout`, {}));
+    await firstValueFrom(
+      this.#http.post<void>(`${this.#config.apiBase}/auth/logout`, {}, { withCredentials: true }),
+    );
   }
 
   // #endregion Auth Endpoints

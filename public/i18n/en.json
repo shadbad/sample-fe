@@ -66,6 +66,16 @@
     "serverError": "A server error occurred. Please try again later.",
     "unauthorized": "You are not authorised to perform this action."
   },
+  "paginate": {
+    "previous": "Previous",
+    "next": "Next",
+    "navAriaLabel": "Pagination navigation",
+    "pageAriaLabel": "Page {{page}}",
+    "currentPageAriaLabel": "Page {{page}}, current",
+    "sortAscAriaLabel": "Sort {{column}} ascending",
+    "sortDescAriaLabel": "Sort {{column}} descending",
+    "resultsCount": "{{total}} results"
+  },
   "a11y": {
     "closeDialog": "Close dialog",
     "openMenu": "Open menu",
@@ -78,5 +88,48 @@
     "networkError": "Could not reach the server.",
     "sessionExpired": "Your session has expired. Please log in again.",
     "staleCache": "Data may be out of date. Refreshing from server…"
+  },
+  "members": {
+    "page": {
+      "title": "Users"
+    },
+    "search": {
+      "placeholder": "Search by name or email…"
+    },
+    "table": {
+      "columns": {
+        "fullName": "Full Name",
+        "email": "Email",
+        "role": "Role",
+        "createdAt": "Created",
+        "actions": "Actions"
+      }
+    },
+    "actions": {
+      "addMember": "Add Member",
+      "edit": "Edit member",
+      "delete": "Delete member",
+      "resetPassword": "Reset password"
+    },
+    "dialogs": {
+      "deleteConfirm": {
+        "title": "Delete Member",
+        "body": "Are you sure you want to delete {{name}}? This action cannot be undone."
+      },
+      "resetPassword": {
+        "title": "Reset Password",
+        "notSupported": "Password reset is not yet available. Please check back later when the feature has been enabled."
+      }
+    },
+    "form": {
+      "createTitle": "Add Member",
+      "editTitle": "Edit Member",
+      "fullNameLabel": "Full name",
+      "emailLabel": "Email address",
+      "roleLabel": "Role"
+    },
+    "pagination": {
+      "itemsPerPage": "Items per page:"
+    }
   }
 }

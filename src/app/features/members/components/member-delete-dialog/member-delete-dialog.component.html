@@ -1,0 +1,28 @@
+<app-dialog [(open)]="open">
+  <!-- #region Dialog Header -->
+  <h2 class="member-delete-dialog__title" dialog-header>
+    {{ 'members.dialogs.deleteConfirm.title' | translate }}
+  </h2>
+  <!-- #endregion Dialog Header -->
+
+  <!-- #region Dialog Body -->
+  <p class="member-delete-dialog__body" dialog-body>
+    {{ 'members.dialogs.deleteConfirm.body' | translate: { name: memberName() } }}
+  </p>
+  <!-- #endregion Dialog Body -->
+
+  <!-- #region Dialog Footer -->
+  <div class="member-delete-dialog__footer" dialog-footer>
+    <button
+      class="member-delete-dialog__btn member-delete-dialog__btn--secondary"
+      (click)="open.set(false)"
+      type="button"
+    >
+      {{ 'common.cancel' | translate }}
+    </button>
+    <button class="member-delete-dialog__btn member-delete-dialog__btn--danger" (click)="onConfirm()" type="button">
+      {{ 'common.delete' | translate }}
+    </button>
+  </div>
+  <!-- #endregion Dialog Footer -->
+</app-dialog>

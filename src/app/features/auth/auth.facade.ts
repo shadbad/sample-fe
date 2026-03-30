@@ -3,6 +3,7 @@ import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import type { UserModel } from './models';
 import { AuthService } from './services/auth.service';
+import { TokenStorageService } from './services/token-storage.service';
 // #endregion Imports
 
 // #region JWT Utility
@@ -29,6 +30,27 @@ function extractSubFromJwt(token: string): string | null {
   }
 }
 
+/**
+ * Returns `true` when the JWT's `exp` claim is in the past or missing.
+ *
+ * @param token - A compact JWT string (`header.payload.signature`).
+ * @returns `true` if the token is expired or malformed, `false` otherwise.
+ */
+function isJwtExpired(token: string): boolean {
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return true;
+    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const payload = JSON.parse(atob(base64)) as Record<string, unknown>;
+    const exp = payload['exp'];
+    if (typeof exp !== 'number') return true;
+    // `exp` is in seconds; Date.now() is in milliseconds
+    return Date.now() >= exp * 1000;
+  } catch {
+    return true;
+  }
+}
+
 // #endregion JWT Utility
 
 // #region State Shape
@@ -36,7 +58,7 @@ function extractSubFromJwt(token: string): string | null {
  * Internal state shape for the Auth feature store.
  */
 interface AuthState {
-  /** In-memory JWT access token. `null` when not authenticated. Never persisted to storage. */
+  /** JWT access token. Persisted to `sessionStorage` across page refreshes; cleared on logout. */
   readonly accessToken: string | null;
   /** The currently authenticated user resolved from the API. `null` before login. */
   readonly currentUser: UserModel | null;
@@ -96,6 +118,7 @@ export const AuthFacade = signalStore(
   // #region Methods
   withMethods((store) => {
     const authService = inject(AuthService);
+    const tokenStorage = inject(TokenStorageService);
 
     return {
       /**
@@ -119,8 +142,12 @@ export const AuthFacade = signalStore(
           const auth = await authService.login(email, password);
           const userId = extractSubFromJwt(auth.accessToken);
           if (!userId) throw new Error('JWT sub claim missing — cannot resolve current user');
+          // Store the token before fetching the user so the interceptor can
+          // attach the Bearer header to the GET /users/:id request.
+          tokenStorage.setToken(auth.accessToken);
+          patchState(store, { accessToken: auth.accessToken });
           const currentUser = await authService.fetchCurrentUser(userId);
-          patchState(store, { accessToken: auth.accessToken, currentUser, isLoading: false });
+          patchState(store, { currentUser, isLoading: false });
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Login failed';
           patchState(store, { error: message, isLoading: false });
@@ -146,8 +173,12 @@ export const AuthFacade = signalStore(
           const auth = await authService.register(fullName, email, password);
           const userId = extractSubFromJwt(auth.accessToken);
           if (!userId) throw new Error('JWT sub claim missing — cannot resolve current user');
+          // Store the token before fetching the user so the interceptor can
+          // attach the Bearer header to the GET /users/:id request.
+          tokenStorage.setToken(auth.accessToken);
+          patchState(store, { accessToken: auth.accessToken });
           const currentUser = await authService.fetchCurrentUser(userId);
-          patchState(store, { accessToken: auth.accessToken, currentUser, isLoading: false });
+          patchState(store, { currentUser, isLoading: false });
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Registration failed';
           patchState(store, { error: message, isLoading: false });
@@ -166,6 +197,7 @@ export const AuthFacade = signalStore(
       async refreshToken(): Promise<void> {
         try {
           const auth = await authService.refresh();
+          tokenStorage.setToken(auth.accessToken);
           patchState(store, { accessToken: auth.accessToken });
         } catch (err) {
           patchState(store, { error: 'Session expired. Please log in again.' });
@@ -187,7 +219,74 @@ export const AuthFacade = signalStore(
         } catch {
           // Ignore server errors — always clear local state
         } finally {
+          tokenStorage.clearToken();
           patchState(store, initialState);
+        }
+      },
+
+      /**
+       * Silently restores the authenticated session on application startup.
+       *
+       * Strategy (in priority order):
+       * 1. **Cookie-based silent refresh** — calls `POST /auth/refresh` with the
+       *    `HttpOnly` refresh-token cookie. Succeeds even when the access token
+       *    has expired or when `sessionStorage` was cleared (e.g. browser restart).
+       * 2. **sessionStorage fallback** — if the cookie refresh fails, reads the
+       *    stored access token and only uses it when it has not yet expired.
+       * 3. **Unauthenticated** — if both strategies fail the store remains in its
+       *    initial state and the user must log in manually.
+       *
+       * This method is registered with `provideAppInitializer` in `app.config.ts`
+       * so the Angular router **waits** for it to resolve before processing the
+       * first navigation. This prevents the `authGuard` from evaluating against
+       * a transiently-empty auth state and incorrectly redirecting to `/login`.
+       *
+       * @returns A `Promise` that always resolves (never rejects) once session
+       *          restoration is complete.
+       */
+      async initSession(): Promise<void> {
+        // --- Strategy 1: cookie-based silent refresh ---------------------------
+        try {
+          const auth = await authService.refresh();
+          tokenStorage.setToken(auth.accessToken);
+          patchState(store, { accessToken: auth.accessToken });
+
+          const userId = extractSubFromJwt(auth.accessToken);
+          if (userId) {
+            try {
+              const currentUser = await authService.fetchCurrentUser(userId);
+              patchState(store, { currentUser });
+            } catch {
+              // Token is valid but profile fetch failed — remain authenticated
+              // without a profile; the interceptor will handle further 401s.
+            }
+          }
+          return; // Strategy 1 complete — do not fall through to Strategy 2
+        } catch {
+          // Refresh cookie absent or expired — try sessionStorage fallback
+        }
+
+        // --- Strategy 2: non-expired sessionStorage token ----------------------
+        const storedToken = tokenStorage.getToken();
+        if (!storedToken || isJwtExpired(storedToken)) {
+          tokenStorage.clearToken();
+          return; // remain unauthenticated
+        }
+
+        const userId = extractSubFromJwt(storedToken);
+        if (!userId) {
+          tokenStorage.clearToken();
+          return;
+        }
+
+        try {
+          patchState(store, { accessToken: storedToken });
+          const currentUser = await authService.fetchCurrentUser(userId);
+          patchState(store, { currentUser });
+        } catch {
+          // Token was not accepted by the server — reset to unauthenticated
+          tokenStorage.clearToken();
+          patchState(store, { ...initialState });
         }
       },
     };

@@ -1,0 +1,13 @@
+<!-- #region Search Input -->
+<div class="search-bar">
+  <span class="icon-search search-bar__icon" aria-hidden="true"></span>
+  <input
+    class="search-bar__input"
+    [placeholder]="placeholder()"
+    [value]="inputValue()"
+    [attr.aria-label]="placeholder() || ('common.search' | translate)"
+    (input)="onInput($any($event.target).value)"
+    type="search"
+  />
+</div>
+<!-- #endregion Search Input -->

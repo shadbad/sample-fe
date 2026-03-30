@@ -9,8 +9,9 @@
 }
 
 body {
+  background-color: var(--theme-bg); // covers areas under the two fixed bars
   width: 100vw;
-  min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
   overflow-y: auto;
 }

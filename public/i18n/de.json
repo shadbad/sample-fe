@@ -66,6 +66,16 @@
     "serverError": "Ein Serverfehler ist aufgetreten. Bitte versuche es später erneut.",
     "unauthorized": "Du bist nicht berechtigt, diese Aktion durchzuführen."
   },
+  "paginate": {
+    "previous": "Zurück",
+    "next": "Weiter",
+    "navAriaLabel": "Seitennavigation",
+    "pageAriaLabel": "Seite {{page}}",
+    "currentPageAriaLabel": "Seite {{page}}, aktuell",
+    "sortAscAriaLabel": "{{column}} aufsteigend sortieren",
+    "sortDescAriaLabel": "{{column}} absteigend sortieren",
+    "resultsCount": "{{total}} Ergebnisse"
+  },
   "a11y": {
     "closeDialog": "Dialog schließen",
     "openMenu": "Menü öffnen",
@@ -78,5 +88,48 @@
     "networkError": "Der Server konnte nicht erreicht werden.",
     "sessionExpired": "Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.",
     "staleCache": "Daten könnten veraltet sein. Aktualisierung vom Server…"
+  },
+  "members": {
+    "page": {
+      "title": "Benutzer"
+    },
+    "search": {
+      "placeholder": "Nach Name oder E-Mail suchen…"
+    },
+    "table": {
+      "columns": {
+        "fullName": "Vollständiger Name",
+        "email": "E-Mail",
+        "role": "Rolle",
+        "createdAt": "Erstellt",
+        "actions": "Aktionen"
+      }
+    },
+    "actions": {
+      "addMember": "Benutzer hinzufügen",
+      "edit": "Benutzer bearbeiten",
+      "delete": "Benutzer löschen",
+      "resetPassword": "Passwort zurücksetzen"
+    },
+    "dialogs": {
+      "deleteConfirm": {
+        "title": "Benutzer löschen",
+        "body": "Bist du sicher, dass du {{name}} löschen möchtest? Diese Aktion kann nicht rükgängig gemacht werden."
+      },
+      "resetPassword": {
+        "title": "Passwort zurücksetzen",
+        "notSupported": "Das Zurücksetzen des Passworts ist noch nicht verfügbar. Bitte schaue später wieder vorbei, wenn die Funktion aktiviert wurde."
+      }
+    },
+    "form": {
+      "createTitle": "Benutzer hinzufügen",
+      "editTitle": "Benutzer bearbeiten",
+      "fullNameLabel": "Vollständiger Name",
+      "emailLabel": "E-Mail-Adresse",
+      "roleLabel": "Rolle"
+    },
+    "pagination": {
+      "itemsPerPage": "Einträge pro Seite:"
+    }
   }
 }

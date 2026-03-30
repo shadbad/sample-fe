@@ -18,5 +18,35 @@
   &__item {
     display: contents;
   }
+
+  // #region Logout Button
+  // Mirrors the visual style of NavLinkComponent's `.nav-link` anchor
+  // so the button is indistinguishable from the other nav items.
+  &__logout-btn {
+    display: inline-flex;
+    align-items: center;
+    transition:
+      color 0.15s ease,
+      background-color 0.15s ease;
+    cursor: pointer;
+    outline-offset: 0.125rem;
+    border: none;
+    border-radius: var(--radius-md);
+    background: none;
+    padding: var(--space-1) var(--space-3);
+    color: var(--theme-txt-muted);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
+
+    &:hover {
+      background-color: var(--theme-bg-subtle);
+      color: var(--theme-txt);
+    }
+
+    &:focus-visible {
+      outline: 0.125rem solid var(--clrBlue);
+    }
+  }
+  // #endregion Logout Button
 }
 // #endregion BEM — app-nav

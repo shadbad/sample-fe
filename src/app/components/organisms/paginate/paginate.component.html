@@ -1,0 +1,124 @@
+<!-- #region Table Wrapper -->
+<div class="paginate">
+  <div class="paginate__table-wrapper">
+    <table class="paginate__table" role="grid">
+      <!-- #region Column Headers -->
+      <thead class="paginate__thead">
+        <tr class="paginate__header-row">
+          @for (col of columns(); track col.key) {
+            <th
+              [class.paginate__th--sortable]="col.sortable"
+              [class.paginate__th--sort-asc]="col.sortable && sort()?.column === col.key && sort()?.direction === 'asc'"
+              [class.paginate__th--sort-desc]="
+                col.sortable && sort()?.column === col.key && sort()?.direction === 'desc'
+              "
+              class="paginate__th"
+              scope="col"
+            >
+              @if (col.sortable) {
+                <!-- #region Sortable Header Button -->
+                <button
+                  class="paginate__sort-btn"
+                  [attr.aria-label]="
+                    sort()?.column === col.key && sort()?.direction === 'asc'
+                      ? ('paginate.sortDescAriaLabel' | translate: { column: col.labelKey | translate })
+                      : ('paginate.sortAscAriaLabel' | translate: { column: col.labelKey | translate })
+                  "
+                  [attr.aria-sort]="
+                    sort()?.column === col.key ? (sort()?.direction === 'asc' ? 'ascending' : 'descending') : 'none'
+                  "
+                  (click)="onSortClick(col.key)"
+                  type="button"
+                >
+                  <span class="paginate__sort-label">{{ col.labelKey | translate }}</span>
+                  <span class="paginate__sort-icon" aria-hidden="true">
+                    @if (sort()?.column === col.key && sort()?.direction === 'asc') {
+                      <span class="paginate__sort-icon--asc">↑</span>
+                    } @else if (sort()?.column === col.key && sort()?.direction === 'desc') {
+                      <span class="paginate__sort-icon--desc">↓</span>
+                    } @else {
+                      <span class="paginate__sort-icon--none">↕</span>
+                    }
+                  </span>
+                </button>
+                <!-- #endregion Sortable Header Button -->
+              } @else {
+                <span class="paginate__col-label">{{ col.labelKey | translate }}</span>
+              }
+            </th>
+          }
+        </tr>
+      </thead>
+      <!-- #endregion Column Headers -->
+
+      <!-- #region Table Body (host-projected rows) -->
+      <tbody class="paginate__tbody">
+        <ng-content />
+      </tbody>
+      <!-- #endregion Table Body -->
+    </table>
+  </div>
+  <!-- #endregion Table Wrapper -->
+
+  <!-- #region Pagination Bar -->
+  <nav class="paginate__pagination" [attr.aria-label]="'paginate.navAriaLabel' | translate">
+    <!-- #region Results Summary -->
+    <span class="paginate__results">
+      {{ 'paginate.resultsCount' | translate: { total: totalCount() } }}
+    </span>
+    <!-- #endregion Results Summary -->
+
+    <!-- #region Page Controls -->
+    <div class="paginate__controls">
+      <!-- Previous -->
+      <app-button
+        class="paginate__nav-btn"
+        [disabled]="isPrevDisabled()"
+        [attr.aria-label]="'paginate.previous' | translate"
+        (click)="onPrevPage()"
+        variant="ghost"
+      >
+        {{ 'paginate.previous' | translate }}
+      </app-button>
+
+      <!-- Page Numbers -->
+      <ol class="paginate__pages" role="list">
+        @for (item of pageItems(); track item.type === 'page' ? item.page : 'e' + $index) {
+          <li class="paginate__page-item">
+            @if (item.type === 'page') {
+              <button
+                [class.paginate__page-btn--active]="item.page === page()"
+                class="paginate__page-btn"
+                [attr.aria-label]="
+                  item.page === page()
+                    ? ('paginate.currentPageAriaLabel' | translate: { page: item.page })
+                    : ('paginate.pageAriaLabel' | translate: { page: item.page })
+                "
+                [attr.aria-current]="item.page === page() ? 'page' : null"
+                (click)="onGoToPage(item.page)"
+                type="button"
+              >
+                {{ item.page }}
+              </button>
+            } @else {
+              <span class="paginate__ellipsis" aria-hidden="true">…</span>
+            }
+          </li>
+        }
+      </ol>
+
+      <!-- Next -->
+      <app-button
+        class="paginate__nav-btn"
+        [disabled]="isNextDisabled()"
+        [attr.aria-label]="'paginate.next' | translate"
+        (click)="onNextPage()"
+        variant="ghost"
+      >
+        {{ 'paginate.next' | translate }}
+      </app-button>
+    </div>
+    <!-- #endregion Page Controls -->
+  </nav>
+  <!-- #endregion Pagination Bar -->
+</div>

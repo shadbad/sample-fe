@@ -1,8 +1,16 @@
 // #region Imports
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig, isDevMode, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {
+  ApplicationConfig,
+  inject,
+  isDevMode,
+  provideAppInitializer,
+  provideBrowserGlobalErrorListeners,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { authInterceptor, provideAuthConfig } from '@features/auth';
+import { environment } from '@env';
+import { AuthFacade, authInterceptor, provideAuthConfig } from '@features/auth';
+import { provideMembersConfig } from '@features/members';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { provideLogConfig } from './core/logging/log-config.token';
@@ -30,10 +38,19 @@ export const appConfig: ApplicationConfig = {
     // #endregion Core
 
     // #region Auth
+    provideAppInitializer(() => inject(AuthFacade).initSession()),
     provideAuthConfig({
-      apiBase: '/api',
+      apiBase: environment.apiBase,
     }),
     // #endregion Auth
+
+    // #region Members
+    provideMembersConfig({
+      apiBase: environment.apiBase,
+      // TODO: replace with dynamic GET /roles fetch — endpoint available at GET /roles
+      roles: [{ id: '82643745-f3f0-440f-885a-d9b88d0f3d18', name: 'admin' }],
+    }),
+    // #endregion Members
 
     // #region i18n
     provideTranslateService({

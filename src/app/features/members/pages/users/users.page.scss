@@ -1,0 +1,32 @@
+// #region Host / Layout
+:host {
+  display: block;
+}
+// #endregion Host / Layout
+
+// #region BEM Blocks
+.users-page {
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  max-width: 72rem;
+
+  // #region Elements
+
+  &__header {
+    margin-bottom: 1.5rem;
+  }
+
+  &__title {
+    margin: 0;
+    color: var(--color-text, #111827);
+    font-weight: 700;
+    font-size: 1.5rem;
+  }
+
+  &__content {
+    display: block;
+  }
+
+  // #endregion Elements
+}
+// #endregion BEM Blocks

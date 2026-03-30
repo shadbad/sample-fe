@@ -21,7 +21,8 @@
       "@components/organisms": ["src/app/components/organisms/index.ts"],
       "@components/templates": ["src/app/components/templates/index.ts"],
       "@features/*": ["src/app/features/*/index.ts"],
-      "@models": ["src/app/models/index.ts"]
+      "@models": ["src/app/models/index.ts"],
+      "@env": ["src/environments/environment.ts"]
     }
   },
   "angularCompilerOptions": {
