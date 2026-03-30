@@ -1,0 +1,21 @@
+<!-- #region Button -->
+<button
+  [class]="'button--' + variant()"
+  [class.button--loading]="loading()"
+  class="button"
+  [type]="type()"
+  [disabled]="disabled() || loading()"
+>
+  <!-- #region Loading Spinner -->
+  @if (loading()) {
+    <span class="button__spinner" aria-hidden="true"></span>
+  }
+  <!-- #endregion Loading Spinner -->
+
+  <!-- #region Label -->
+  <span class="button__label">
+    <ng-content />
+  </span>
+  <!-- #endregion Label -->
+</button>
+<!-- #endregion Button -->

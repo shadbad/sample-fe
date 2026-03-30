@@ -1,0 +1,32 @@
+// #region Host / Layout
+:host {
+  display: block;
+  min-height: 100vh;
+}
+// #endregion Host / Layout
+
+// #region BEM Block
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--theme-bg);
+  padding: 2rem 1rem;
+  min-height: 100vh;
+
+  // #region Card
+  &__card {
+    box-shadow: 0 4px 24px rgb(0 0 0 / 12%);
+    border: 1px solid var(--theme-border);
+    border-radius: 0.75rem;
+    background-color: var(--theme-bg-subtle);
+    padding: 2.5rem 2rem;
+    width: 100%;
+
+    @media (width >= 480px) {
+      max-width: 26rem;
+    }
+  }
+  // #endregion Card
+}
+// #endregion BEM Block

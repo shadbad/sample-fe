@@ -1,0 +1,15 @@
+<!-- #region Label -->
+<label class="input-field__label" [for]="inputId()">{{ label() }}</label>
+<!-- #endregion Label -->
+
+<!-- #region Control Slot -->
+<div class="input-field__control-wrapper">
+  <ng-content />
+</div>
+<!-- #endregion Control Slot -->
+
+<!-- #region Error -->
+@if (errorMessage(); as msg) {
+  <span class="input-field__error" aria-live="polite" role="alert">{{ msg }}</span>
+}
+<!-- #endregion Error -->

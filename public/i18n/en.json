@@ -36,13 +36,26 @@
     "copyright": "© {{year}} Sample App. All rights reserved."
   },
   "auth": {
-    "login": "Log in",
-    "logout": "Log out",
-    "email": "Email address",
-    "password": "Password",
-    "forgotPassword": "Forgot your password?",
-    "loginError": "Invalid email or password.",
-    "logoutSuccess": "You have been logged out."
+    "logoutSuccess": "You have been logged out.",
+    "login": {
+      "title": "Log in",
+      "emailLabel": "Email address",
+      "passwordLabel": "Password",
+      "submitButton": "Log in",
+      "noAccount": "Don't have an account?"
+    },
+    "register": {
+      "title": "Create an account",
+      "fullNameLabel": "Full name",
+      "emailLabel": "Email address",
+      "passwordLabel": "Password",
+      "submitButton": "Create account",
+      "haveAccount": "Already have an account?"
+    },
+    "errors": {
+      "invalidCredentials": "Invalid email or password.",
+      "emailTaken": "This email address is already registered."
+    }
   },
   "errors": {
     "required": "This field is required.",

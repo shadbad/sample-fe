@@ -1,0 +1,80 @@
+<!-- #region Form -->
+<form class="register-form" [formGroup]="form" (ngSubmit)="onSubmit()" aria-labelledby="register-form-title" novalidate>
+  <!-- #region Title -->
+  <h1 class="register-form__title" id="register-form-title">
+    {{ 'auth.register.title' | translate }}
+  </h1>
+  <!-- #endregion Title -->
+
+  <!-- #region Server Error -->
+  @if (serverError()) {
+    <div class="register-form__server-error" aria-live="assertive" role="alert">
+      {{ serverError() }}
+    </div>
+  }
+  <!-- #endregion Server Error -->
+
+  <!-- #region Full Name Field -->
+  <app-input-field
+    [label]="'auth.register.fullNameLabel' | translate"
+    [errorMessage]="fullNameError()"
+    inputId="register-full-name"
+  >
+    <input
+      id="register-full-name"
+      [attr.aria-invalid]="fullNameError() !== null"
+      type="text"
+      autocomplete="name"
+      formControlName="fullName"
+    />
+  </app-input-field>
+  <!-- #endregion Full Name Field -->
+
+  <!-- #region Email Field -->
+  <app-input-field
+    [label]="'auth.register.emailLabel' | translate"
+    [errorMessage]="emailError()"
+    inputId="register-email"
+  >
+    <input
+      id="register-email"
+      [attr.aria-invalid]="emailError() !== null"
+      type="email"
+      autocomplete="email"
+      formControlName="email"
+    />
+  </app-input-field>
+  <!-- #endregion Email Field -->
+
+  <!-- #region Password Field -->
+  <app-input-field
+    [label]="'auth.register.passwordLabel' | translate"
+    [errorMessage]="passwordError()"
+    inputId="register-password"
+  >
+    <input
+      id="register-password"
+      [attr.aria-invalid]="passwordError() !== null"
+      type="password"
+      autocomplete="new-password"
+      formControlName="password"
+    />
+  </app-input-field>
+  <!-- #endregion Password Field -->
+
+  <!-- #region Submit -->
+  <app-button [loading]="isLoading()" [disabled]="isLoading()" type="submit" variant="primary">
+    {{ 'auth.register.submitButton' | translate }}
+  </app-button>
+  <!-- #endregion Submit -->
+
+  <!-- #region Login Link -->
+  <p class="register-form__login-prompt">
+    {{ 'auth.register.haveAccount' | translate }}
+    <a class="register-form__login-link" routerLink="/login">
+      {{ 'auth.login.title' | translate }}
+    </a>
+  </p>
+  <!-- #endregion Login Link -->
+</form>
+<!-- #endregion Form -->

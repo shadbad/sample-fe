@@ -27,6 +27,8 @@ export default defineConfig({
       '@components/organisms': resolve(__dirname, 'src/app/components/organisms/index.ts'),
       '@components/templates': resolve(__dirname, 'src/app/components/templates/index.ts'),
       '@models': resolve(__dirname, 'src/app/models/index.ts'),
+      '@features/auth': resolve(__dirname, 'src/app/features/auth/index.ts'),
+      '@features/users': resolve(__dirname, 'src/app/features/users/index.ts'),
     },
     // #endregion Path Aliases
   },
