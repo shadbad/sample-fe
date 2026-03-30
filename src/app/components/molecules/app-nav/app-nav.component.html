@@ -1,4 +1,4 @@
-<!-- Primary navigation containing the Users and Logout links. -->
+<!-- Primary navigation containing the Users route link and a Logout button. -->
 <nav class="app-nav" [attr.aria-label]="'header.navAriaLabel' | translate">
   <ul class="app-nav__list" role="list">
     <li class="app-nav__item">
@@ -8,9 +8,9 @@
     </li>
 
     <li class="app-nav__item">
-      <app-nav-link href="/logout">
-        <span>{{ 'nav.logout' | translate }}</span>
-      </app-nav-link>
+      <button class="app-nav__logout-btn" (click)="onLogout()" type="button">
+        {{ 'nav.logout' | translate }}
+      </button>
     </li>
   </ul>
 </nav>

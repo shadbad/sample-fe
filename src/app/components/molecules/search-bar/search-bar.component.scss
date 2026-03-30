@@ -1,0 +1,54 @@
+// #region Host / Layout
+:host {
+  display: block;
+}
+// #endregion Host / Layout
+
+// #region BEM Blocks
+.search-bar {
+  display: flex;
+  position: relative;
+  align-items: center;
+
+  // #region Elements
+
+  &__icon {
+    position: absolute;
+    left: 0.75rem;
+    pointer-events: none;
+    color: var(--color-text-muted, #6b7280);
+    font-size: 1rem;
+  }
+
+  &__input {
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+    outline: none;
+    border: 1px solid var(--color-border, #d1d5db);
+    border-radius: 0.375rem;
+    background-color: var(--color-surface, #fff);
+    padding: 0.5rem 0.75rem 0.5rem 2.25rem;
+    width: 100%;
+    color: var(--color-text, #111827);
+    font-size: 0.875rem;
+    line-height: 1.5;
+
+    &::placeholder {
+      color: var(--color-text-muted, #9ca3af);
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgb(59 130 246 / 25%);
+      border-color: var(--color-primary, #3b82f6);
+    }
+
+    // Remove default browser clear button in search inputs — we rely on native
+    &::-webkit-search-cancel-button {
+      appearance: none;
+    }
+  }
+
+  // #endregion Elements
+}
+// #endregion BEM Blocks

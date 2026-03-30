@@ -119,8 +119,11 @@ export const AuthFacade = signalStore(
           const auth = await authService.login(email, password);
           const userId = extractSubFromJwt(auth.accessToken);
           if (!userId) throw new Error('JWT sub claim missing — cannot resolve current user');
+          // Store the token before fetching the user so the interceptor can
+          // attach the Bearer header to the GET /users/:id request.
+          patchState(store, { accessToken: auth.accessToken });
           const currentUser = await authService.fetchCurrentUser(userId);
-          patchState(store, { accessToken: auth.accessToken, currentUser, isLoading: false });
+          patchState(store, { currentUser, isLoading: false });
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Login failed';
           patchState(store, { error: message, isLoading: false });
@@ -146,8 +149,11 @@ export const AuthFacade = signalStore(
           const auth = await authService.register(fullName, email, password);
           const userId = extractSubFromJwt(auth.accessToken);
           if (!userId) throw new Error('JWT sub claim missing — cannot resolve current user');
+          // Store the token before fetching the user so the interceptor can
+          // attach the Bearer header to the GET /users/:id request.
+          patchState(store, { accessToken: auth.accessToken });
           const currentUser = await authService.fetchCurrentUser(userId);
-          patchState(store, { accessToken: auth.accessToken, currentUser, isLoading: false });
+          patchState(store, { currentUser, isLoading: false });
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Registration failed';
           patchState(store, { error: message, isLoading: false });

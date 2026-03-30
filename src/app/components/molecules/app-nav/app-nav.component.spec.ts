@@ -1,11 +1,22 @@
 // #region Imports
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { AuthFacade } from '@features/auth';
 import { TranslateService, provideTranslateService } from '@ngx-translate/core';
 import { render, screen } from '@testing-library/angular';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { AppNavComponent } from './app-nav.component';
 // #endregion Imports
+
+// #region Mocks
+
+/** Minimal {@link AuthFacade} stub — only the `logout` method is exercised here. */
+const mockAuthFacade = {
+  /** Resolves immediately without contacting the server. */
+  logout: vi.fn().mockResolvedValue(undefined),
+};
+
+// #endregion Mocks
 
 // #region Test Helpers
 
@@ -27,7 +38,11 @@ describe('AppNavComponent', () => {
    */
   async function setup(): Promise<void> {
     const { fixture } = await render(AppNavComponent, {
-      providers: [provideRouter([]), provideTranslateService()],
+      providers: [
+        provideRouter([]),
+        provideTranslateService(),
+        { provide: AuthFacade, useValue: mockAuthFacade },
+      ],
     });
 
     const translate = TestBed.inject(TranslateService);
@@ -58,13 +73,12 @@ describe('AppNavComponent', () => {
     expect(usersLink).toHaveAttribute('href', '/users');
   });
 
-  it('should render the Logout link', async () => {
+  it('should render the Logout button', async () => {
     await setup();
 
-    const logoutLink = screen.getByRole('link', { name: /log out/i });
+    const logoutBtn = screen.getByRole('button', { name: /log out/i });
 
-    expect(logoutLink).toBeInTheDocument();
-    expect(logoutLink).toHaveAttribute('href', '/logout');
+    expect(logoutBtn).toBeInTheDocument();
   });
 
   // #endregion Tests

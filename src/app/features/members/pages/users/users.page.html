@@ -1,0 +1,21 @@
+<!-- #region Page Layout -->
+<div class="users-page">
+  <!-- #region Page Header -->
+  <header class="users-page__header">
+    <h1 class="users-page__title">{{ 'members.page.title' | translate }}</h1>
+  </header>
+  <!-- #endregion Page Header -->
+
+  <!-- #region Role-Conditional Content -->
+  <main class="users-page__content">
+    @if (isAdmin()) {
+      <!-- Admin: full CRUD management table -->
+      <app-member-table />
+    } @else {
+      <!-- Regular user: read-only member list -->
+      <app-member-list />
+    }
+  </main>
+  <!-- #endregion Role-Conditional Content -->
+</div>
+<!-- #endregion Page Layout -->

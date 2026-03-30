@@ -1,0 +1,79 @@
+<app-dialog [(open)]="open">
+  <!-- #region Dialog Header -->
+  <h2 class="member-form-dialog__title" dialog-header>
+    @if (isEditMode()) {
+      {{ 'members.form.editTitle' | translate }}
+    } @else {
+      {{ 'members.form.createTitle' | translate }}
+    }
+  </h2>
+  <!-- #endregion Dialog Header -->
+
+  <!-- #region Dialog Body -->
+  <form class="member-form-dialog__form" id="member-form" [formGroup]="form" (ngSubmit)="onSubmit()" dialog-body>
+    <!-- Full Name -->
+    <div class="member-form-dialog__field">
+      <label class="member-form-dialog__label" for="member-fullName">
+        {{ 'members.form.fullNameLabel' | translate }}
+      </label>
+      <input
+        [class.member-form-dialog__input--error]="!!fullNameError"
+        class="member-form-dialog__input"
+        id="member-fullName"
+        [attr.aria-describedby]="fullNameError ? 'member-fullName-error' : null"
+        type="text"
+        formControlName="fullName"
+      />
+      @if (fullNameError) {
+        <span class="member-form-dialog__error" id="member-fullName-error" role="alert">
+          {{ fullNameError | translate }}
+        </span>
+      }
+    </div>
+
+    <!-- Email -->
+    <div class="member-form-dialog__field">
+      <label class="member-form-dialog__label" for="member-email">
+        {{ 'members.form.emailLabel' | translate }}
+      </label>
+      <input
+        [class.member-form-dialog__input--error]="!!emailError"
+        class="member-form-dialog__input"
+        id="member-email"
+        [attr.aria-describedby]="emailError ? 'member-email-error' : null"
+        type="email"
+        formControlName="email"
+      />
+      @if (emailError) {
+        <span class="member-form-dialog__error" id="member-email-error" role="alert">
+          {{ emailError | translate }}
+        </span>
+      }
+    </div>
+
+    <!-- Role -->
+    <div class="member-form-dialog__field">
+      <label class="member-form-dialog__label" for="member-role">
+        {{ 'members.form.roleLabel' | translate }}
+      </label>
+      <select class="member-form-dialog__select" id="member-role" formControlName="roleId">
+        <option [value]="null">—</option>
+        @for (role of config.roles; track role.id) {
+          <option [value]="role.id">{{ role.name }}</option>
+        }
+      </select>
+    </div>
+  </form>
+  <!-- #endregion Dialog Body -->
+
+  <!-- #region Dialog Footer -->
+  <div class="member-form-dialog__footer" dialog-footer>
+    <button class="member-form-dialog__btn member-form-dialog__btn--secondary" (click)="open.set(false)" type="button">
+      {{ 'common.cancel' | translate }}
+    </button>
+    <button class="member-form-dialog__btn member-form-dialog__btn--primary" form="member-form" type="submit">
+      {{ 'common.save' | translate }}
+    </button>
+  </div>
+  <!-- #endregion Dialog Footer -->
+</app-dialog>

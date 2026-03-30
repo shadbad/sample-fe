@@ -1,6 +1,7 @@
 // #region Imports
 import type { Routes } from '@angular/router';
-import { authGuard, authRoutes } from '@features/auth';
+import { authRoutes } from '@features/auth';
+import { membersRoutes } from '@features/members';
 // #endregion Imports
 
 /**
@@ -10,7 +11,6 @@ import { authGuard, authRoutes } from '@features/auth';
  * - `/login`     — Public login page (guest-only via `guestGuard` in `authRoutes`).
  * - `/register`  — Public registration page (guest-only via `guestGuard` in `authRoutes`).
  * - `/users`     — Protected user list / management page (auth-only via `authGuard`).
- *                  Component loaded lazily once the `users` feature is implemented.
  */
 export const routes: Routes = [
   // #region Default Redirect
@@ -28,13 +28,10 @@ export const routes: Routes = [
   },
   // #endregion Auth Feature Routes
 
-  // #region Users Route — placeholder (users feature pending)
+  // #region Members Feature Routes (/users)
   {
-    path: 'users',
-    canActivate: [authGuard],
-    // TODO: replace with lazy-loaded UsersPage once the users feature is implemented
-    loadComponent: () =>
-      import('./components/organisms/header/header.component').then((m) => m.HeaderComponent),
+    path: '',
+    loadChildren: () => Promise.resolve(membersRoutes),
   },
-  // #endregion Users Route
+  // #endregion Members Feature Routes
 ];

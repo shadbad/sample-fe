@@ -1,0 +1,181 @@
+// #region Host / Layout
+:host {
+  display: block;
+  position: relative;
+}
+// #endregion Host / Layout
+
+// #region BEM Blocks
+.member-table {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  // #region Elements
+
+  &__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+
+    app-search-bar {
+      flex: 1;
+      min-width: 12rem;
+      max-width: 24rem;
+    }
+  }
+
+  &__page-size-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text-muted, #6b7280);
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+
+  &__page-size-select {
+    cursor: pointer;
+    outline: none;
+    border: 1px solid var(--color-border, #d1d5db);
+    border-radius: 0.25rem;
+    background: var(--color-surface, #fff);
+    padding: 0.375rem 0.5rem;
+    font-size: 0.875rem;
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgb(59 130 246 / 25%);
+      border-color: var(--color-primary, #3b82f6);
+    }
+  }
+
+  &__add-btn {
+    transition: background-color 0.15s ease;
+    cursor: pointer;
+    margin-left: auto;
+    border: none;
+    border-radius: 0.375rem;
+    background-color: var(--color-primary, #3b82f6);
+    padding: 0.5rem 1rem;
+    color: #fff;
+    font-weight: 500;
+    font-size: 0.875rem;
+    white-space: nowrap;
+
+    &:hover {
+      background-color: var(--color-primary-hover, #2563eb);
+    }
+  }
+
+  &__loading,
+  &__mutating {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    color: var(--color-text-muted, #6b7280);
+    font-size: 0.875rem;
+  }
+
+  &__mutating {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    background: rgb(255 255 255 / 70%);
+  }
+
+  &__spinner {
+    display: inline-block;
+    animation: spin 0.75s linear infinite;
+    border: 2px solid var(--color-border, #e5e7eb);
+    border-top-color: var(--color-primary, #3b82f6);
+    border-radius: 50%;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  &__error {
+    border: 1px solid rgb(239 68 68 / 30%);
+    border-radius: 0.375rem;
+    background-color: rgb(239 68 68 / 8%);
+    padding: 0.75rem;
+    color: var(--color-danger, #ef4444);
+    font-size: 0.875rem;
+  }
+
+  &__empty {
+    padding: 2rem;
+    color: var(--color-text-muted, #6b7280);
+    font-size: 0.875rem;
+    text-align: center;
+  }
+
+  &__row {
+    &:hover {
+      background-color: var(--color-surface-hover, #f9fafb);
+    }
+  }
+
+  &__cell {
+    vertical-align: middle;
+    padding: 0.75rem 1rem;
+    color: var(--color-text, #111827);
+    font-size: 0.875rem;
+
+    &--email {
+      color: var(--color-text-muted, #6b7280);
+    }
+
+    &--date {
+      color: var(--color-text-muted, #6b7280);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    &--actions {
+      width: 8rem;
+      text-align: right;
+    }
+  }
+
+  &__action-btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+    cursor: pointer;
+    border: none;
+    border-radius: 0.25rem;
+    background: transparent;
+    width: 2rem;
+    height: 2rem;
+    color: var(--color-text-muted, #6b7280);
+
+    &:hover {
+      background-color: var(--color-surface-hover, #f3f4f6);
+      color: var(--color-text, #111827);
+    }
+
+    &--danger {
+      &:hover {
+        background-color: rgb(239 68 68 / 8%);
+        color: var(--color-danger, #ef4444);
+      }
+    }
+  }
+
+  // #endregion Elements
+}
+
+// #region Animations
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+// #endregion Animations
+// #endregion BEM Blocks

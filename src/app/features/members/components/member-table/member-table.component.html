@@ -1,0 +1,136 @@
+<!-- #region Toolbar -->
+<div class="member-table__toolbar">
+  <!-- Search -->
+  <app-search-bar
+    class="member-table__search"
+    [placeholder]="'members.search.placeholder' | translate"
+    [value]="facade.searchQuery()"
+    (searchChange)="facade.setSearch($event)"
+  />
+
+  <!-- Page-size selector -->
+  <label class="member-table__page-size-label" for="member-page-size">
+    {{ 'members.pagination.itemsPerPage' | translate }}
+    <select
+      class="member-table__page-size-select"
+      id="member-page-size"
+      [value]="facade.pageSize()"
+      (change)="onPageSizeChange($event)"
+    >
+      @for (size of pageSizeOptions; track size) {
+        <option [value]="size">{{ size }}</option>
+      }
+    </select>
+  </label>
+
+  <!-- Add Member -->
+  <button class="member-table__add-btn" (click)="onAddMember()" type="button">
+    + {{ 'members.actions.addMember' | translate }}
+  </button>
+</div>
+<!-- #endregion Toolbar -->
+
+<!-- #region Loading State -->
+@if (facade.isLoading()) {
+  <div class="member-table__loading" [attr.aria-label]="'common.loading' | translate" role="status">
+    <span class="member-table__spinner" aria-hidden="true"></span>
+    <span>{{ 'common.loading' | translate }}</span>
+  </div>
+}
+<!-- #endregion Loading State -->
+
+<!-- #region Error State -->
+@if (facade.error()) {
+  <p class="member-table__error" role="alert">{{ facade.error() }}</p>
+}
+<!-- #endregion Error State -->
+
+<!-- #region Mutating Overlay -->
+@if (facade.isMutating()) {
+  <div class="member-table__mutating" [attr.aria-label]="'common.loading' | translate" role="status">
+    <span class="member-table__spinner" aria-hidden="true"></span>
+  </div>
+}
+<!-- #endregion Mutating Overlay -->
+
+<!-- #region Admin Table via PaginateComponent -->
+@if (!facade.isLoading()) {
+  <app-paginate
+    [columns]="columns"
+    [totalCount]="facade.total()"
+    [page]="facade.currentPage()"
+    [pageSize]="facade.pageSize()"
+    (pageChange)="facade.setPage($event)"
+    (sortChange)="onSortChange($event)"
+  >
+    @if (facade.isEmpty()) {
+      <tr>
+        <td class="member-table__empty" colspan="5">
+          {{ 'common.noResults' | translate }}
+        </td>
+      </tr>
+    } @else {
+      @for (member of facade.members(); track member.id) {
+        <tr class="member-table__row">
+          <!-- Full Name -->
+          <td class="member-table__cell">{{ member.fullName }}</td>
+
+          <!-- Email -->
+          <td class="member-table__cell member-table__cell--email">{{ member.email }}</td>
+
+          <!-- Role -->
+          <td class="member-table__cell">
+            <app-badge [text]="member.role?.name ?? null" [variant]="getRoleVariant(member.role)" />
+          </td>
+
+          <!-- Created At -->
+          <td class="member-table__cell member-table__cell--date">
+            {{ formatDate(member.createdAt) }}
+          </td>
+
+          <!-- Actions -->
+          <td class="member-table__cell member-table__cell--actions">
+            <!-- Edit -->
+            <button
+              class="member-table__action-btn"
+              [attr.aria-label]="'members.actions.edit' | translate"
+              (click)="onEdit(member)"
+              type="button"
+            >
+              <span class="icon-edit" aria-hidden="true"></span>
+            </button>
+
+            <!-- Reset Password -->
+            <button
+              class="member-table__action-btn"
+              [attr.aria-label]="'members.actions.resetPassword' | translate"
+              (click)="onResetPassword(member)"
+              type="button"
+            >
+              <span class="icon-key" aria-hidden="true"></span>
+            </button>
+
+            <!-- Delete -->
+            <button
+              class="member-table__action-btn member-table__action-btn--danger"
+              [attr.aria-label]="'members.actions.delete' | translate"
+              (click)="onDelete(member)"
+              type="button"
+            >
+              <span class="icon-trash" aria-hidden="true"></span>
+            </button>
+          </td>
+        </tr>
+      }
+    }
+  </app-paginate>
+}
+<!-- #endregion Admin Table via PaginateComponent -->
+
+<!-- #region Dialogs -->
+<app-member-form-dialog [(open)]="isFormOpen" [member]="selectedMember()" (save)="onFormSave($event)" />
+
+<app-member-delete-dialog [(open)]="isDeleteOpen" [member]="selectedMember()" (confirm)="onDeleteConfirm()" />
+
+<app-reset-password-dialog [(open)]="isResetPasswordOpen" />
+<!-- #endregion Dialogs -->

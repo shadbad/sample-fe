@@ -21,12 +21,20 @@ export const AUTH_RETRY = new HttpContextToken<boolean>(() => false);
 // #region URL Skip List
 
 /**
- * URL substrings for endpoints that must NOT receive an `Authorization` header.
+ * URL substrings for endpoints that must NOT receive an `Authorization` header
+ * and must bypass the 401 refresh-retry logic entirely.
  *
- * These routes are public (login / register) or self-authenticating via cookie
- * (refresh), so attaching a Bearer token would be incorrect.
+ * - Login / register: public endpoints, no token needed.
+ * - Refresh: self-authenticating via HttpOnly cookie.
+ * - Logout: must never trigger a refresh retry; if the server returns 401 the
+ *   session is already invalid and retrying would cause an infinite loop.
  */
-const SKIP_AUTH_URLS: readonly string[] = ['/auth/login', '/auth/register', '/auth/refresh'];
+const SKIP_AUTH_URLS: readonly string[] = [
+  '/auth/login',
+  '/auth/register',
+  '/auth/refresh',
+  '/auth/logout',
+];
 
 // #endregion URL Skip List
 

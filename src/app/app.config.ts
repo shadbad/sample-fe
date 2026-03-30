@@ -2,7 +2,9 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig, isDevMode, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { environment } from '@env';
 import { authInterceptor, provideAuthConfig } from '@features/auth';
+import { provideMembersConfig } from '@features/members';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { provideLogConfig } from './core/logging/log-config.token';
@@ -31,9 +33,20 @@ export const appConfig: ApplicationConfig = {
 
     // #region Auth
     provideAuthConfig({
-      apiBase: '/api',
+      apiBase: environment.apiBase,
     }),
     // #endregion Auth
+
+    // #region Members
+    provideMembersConfig({
+      apiBase: environment.apiBase,
+      // TODO: replace with dynamic GET /roles once the endpoint is available
+      roles: [
+        { id: '00000000-0000-0000-0000-000000000001', name: 'admin' },
+        { id: '00000000-0000-0000-0000-000000000002', name: 'user' },
+      ],
+    }),
+    // #endregion Members
 
     // #region i18n
     provideTranslateService({
