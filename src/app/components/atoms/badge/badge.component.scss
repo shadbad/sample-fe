@@ -1,0 +1,45 @@
+// #region Host / Layout
+:host {
+  display: inline-flex;
+}
+// #endregion Host / Layout
+
+// #region BEM Block
+.badge {
+  display: inline-flex;
+  border-radius: 9999px;
+  padding: 0.125rem 0.625rem;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+  white-space: nowrap;
+
+  // #region Variants
+  &--neutral {
+    background-color: var(--color-neutral-subtle);
+    color: var(--color-neutral);
+  }
+
+  &--info {
+    background-color: var(--color-info-subtle);
+    color: var(--color-info);
+  }
+
+  &--success {
+    background-color: color-mix(in srgb, var(--clrGreen) 15%, transparent);
+    color: var(--clrGreen);
+  }
+
+  &--warning {
+    background-color: var(--color-warning-subtle);
+    color: var(--color-warning);
+  }
+
+  &--danger {
+    background-color: var(--color-error-subtle);
+    color: var(--color-error);
+  }
+  // #endregion Variants
+}
+// #endregion BEM Block

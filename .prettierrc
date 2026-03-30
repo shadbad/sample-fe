@@ -1,0 +1,50 @@
+{
+  "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": true,
+  "quoteProps": "as-needed",
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "bracketSameLine": false,
+  "arrowParens": "always",
+  "endOfLine": "lf",
+  "plugins": [
+    "prettier-plugin-organize-imports",
+    "prettier-plugin-organize-attributes",
+    "prettier-plugin-css-order"
+  ],
+  "overrides": [
+    {
+      "files": "*.html",
+      "options": {
+        "parser": "angular",
+        "printWidth": 120,
+        "attributeGroups": [
+          "^\\*",
+          "^#",
+          "^\\[\\(",
+          "^\\[class",
+          "^\\[style",
+          "^class$",
+          "^id$",
+          "^\\[",
+          "^\\(",
+          "^\\(\\(",
+          "^aria-",
+          "^role$",
+          "^tabindex$",
+          "^i18n",
+          "$DEFAULT"
+        ]
+      }
+    },
+    {
+      "files": ["*.scss", "*.css"],
+      "options": {
+        "cssPropertiesOrder": "concentric"
+      }
+    }
+  ]
+}

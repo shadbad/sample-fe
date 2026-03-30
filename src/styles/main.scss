@@ -1,0 +1,16 @@
+@use './general/colors.scss';
+@use './general/fonts.scss';
+@use './general/icons.scss';
+@use './general/reset.scss';
+@use './general/common.scss';
+
+:root {
+  @extend %scrollbar;
+}
+
+body {
+  width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}

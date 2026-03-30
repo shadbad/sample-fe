@@ -1,0 +1,62 @@
+<!-- #region Form -->
+<form class="login-form" [formGroup]="form" (ngSubmit)="onSubmit()" aria-labelledby="login-form-title" novalidate>
+  <!-- #region Title -->
+  <h1 class="login-form__title" id="login-form-title">
+    {{ 'auth.login.title' | translate }}
+  </h1>
+  <!-- #endregion Title -->
+
+  <!-- #region Server Error -->
+  @if (serverError()) {
+    <div class="login-form__server-error" aria-live="assertive" role="alert">
+      {{ serverError() }}
+    </div>
+  }
+  <!-- #endregion Server Error -->
+
+  <!-- #region Email Field -->
+  <app-input-field [label]="'auth.login.emailLabel' | translate" [errorMessage]="emailError()" inputId="login-email">
+    <input
+      id="login-email"
+      [attr.aria-describedby]="emailError() ? 'login-email-error' : null"
+      [attr.aria-invalid]="emailError() !== null"
+      type="email"
+      autocomplete="email"
+      formControlName="email"
+    />
+  </app-input-field>
+  <!-- #endregion Email Field -->
+
+  <!-- #region Password Field -->
+  <app-input-field
+    [label]="'auth.login.passwordLabel' | translate"
+    [errorMessage]="passwordError()"
+    inputId="login-password"
+  >
+    <input
+      id="login-password"
+      [attr.aria-describedby]="passwordError() ? 'login-password-error' : null"
+      [attr.aria-invalid]="passwordError() !== null"
+      type="password"
+      autocomplete="current-password"
+      formControlName="password"
+    />
+  </app-input-field>
+  <!-- #endregion Password Field -->
+
+  <!-- #region Submit -->
+  <app-button [loading]="isLoading()" [disabled]="isLoading()" type="submit" variant="primary">
+    {{ 'auth.login.submitButton' | translate }}
+  </app-button>
+  <!-- #endregion Submit -->
+
+  <!-- #region Register Link -->
+  <p class="login-form__register-prompt">
+    {{ 'auth.login.noAccount' | translate }}
+    <a class="login-form__register-link" routerLink="/register">
+      {{ 'auth.register.title' | translate }}
+    </a>
+  </p>
+  <!-- #endregion Register Link -->
+</form>
+<!-- #endregion Form -->

@@ -1,0 +1,21 @@
+// #region Host / Layout
+:host {
+  display: block;
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: var(--z-toast, 900);
+  pointer-events: none;
+}
+// #endregion Host / Layout
+
+// #region BEM Block
+.toast-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 22rem;
+  max-width: calc(100vw - 3rem);
+  pointer-events: all;
+}
+// #endregion BEM Block

@@ -1,0 +1,35 @@
+@use 'styles/general/common' as common;
+
+// #region Host / Layout
+:host {
+  display: block;
+}
+// #endregion Host / Layout
+
+// #region BEM — footer
+.footer {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+  border-top: 0.0625rem solid var(--theme-border);
+  background-color: var(--theme-bg);
+  height: 3rem;
+
+  &__inner {
+    @include common.wrapper;
+
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  &__copyright {
+    margin: 0;
+    color: var(--theme-txt-muted);
+    font-size: var(--font-size-sm);
+  }
+}
+// #endregion BEM — footer

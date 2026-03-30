@@ -1,0 +1,82 @@
+{
+  "common": {
+    "appName": "Sample App",
+    "loading": "Wird geladen…",
+    "error": "Ein Fehler ist aufgetreten. Bitte versuche es erneut.",
+    "retry": "Wiederholen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "close": "Schließen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "search": "Suchen",
+    "noResults": "Keine Ergebnisse gefunden.",
+    "yes": "Ja",
+    "no": "Nein"
+  },
+  "app": {
+    "welcomeTitle": "Willkommen bei Sample FE!"
+  },
+  "header": {
+    "logoAriaLabel": "Zur Startseite",
+    "navAriaLabel": "Hauptnavigation"
+  },
+  "nav": {
+    "home": "Startseite",
+    "dashboard": "Dashboard",
+    "profile": "Profil",
+    "settings": "Einstellungen",
+    "users": "Benutzer",
+    "logout": "Abmelden"
+  },
+  "footer": {
+    "copyright": "© {{year}} Sample App. Alle Rechte vorbehalten."
+  },
+  "auth": {
+    "logoutSuccess": "Du wurdest erfolgreich abgemeldet.",
+    "login": {
+      "title": "Anmelden",
+      "emailLabel": "E-Mail-Adresse",
+      "passwordLabel": "Passwort",
+      "submitButton": "Anmelden",
+      "noAccount": "Noch kein Konto?"
+    },
+    "register": {
+      "title": "Konto erstellen",
+      "fullNameLabel": "Vollständiger Name",
+      "emailLabel": "E-Mail-Adresse",
+      "passwordLabel": "Passwort",
+      "submitButton": "Konto erstellen",
+      "haveAccount": "Bereits ein Konto vorhanden?"
+    },
+    "errors": {
+      "invalidCredentials": "Ungültige E-Mail-Adresse oder Passwort.",
+      "emailTaken": "Diese E-Mail-Adresse ist bereits registriert."
+    }
+  },
+  "errors": {
+    "required": "Dieses Feld ist erforderlich.",
+    "invalidEmail": "Bitte gib eine gültige E-Mail-Adresse ein.",
+    "minLength": "Die Mindestlänge beträgt {{value}} Zeichen.",
+    "maxLength": "Die maximale Länge beträgt {{value}} Zeichen.",
+    "notFound": "Die angeforderte Ressource wurde nicht gefunden.",
+    "serverError": "Ein Serverfehler ist aufgetreten. Bitte versuche es später erneut.",
+    "unauthorized": "Du bist nicht berechtigt, diese Aktion durchzuführen."
+  },
+  "a11y": {
+    "closeDialog": "Dialog schließen",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen",
+    "loading": "Inhalt wird geladen, bitte warten.",
+    "notificationsRegion": "Benachrichtigungen"
+  },
+  "log": {
+    "genericError": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+    "networkError": "Der Server konnte nicht erreicht werden.",
+    "sessionExpired": "Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.",
+    "staleCache": "Daten könnten veraltet sein. Aktualisierung vom Server…"
+  }
+}

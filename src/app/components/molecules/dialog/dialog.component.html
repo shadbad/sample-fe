@@ -1,0 +1,33 @@
+<!-- Native <dialog> element; all ARIA semantics are provided by the browser.
+     Keyboard interaction (Escape) is handled natively via the `cancel` event.
+     The eslint-disable below suppresses false-positive a11y rules that do not
+     recognise <dialog> as an inherently interactive, focusable element. -->
+<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
+<dialog #dialogRef class="dialog" (cancel)="onNativeCancel($event)" (click)="onDialogClick($event)" aria-modal="true">
+  <!-- Inner panel prevents backdrop clicks from accidentally closing the
+       dialog when the user interacts with padded areas inside the panel. -->
+  <div class="dialog__panel">
+    <!-- Header slot — e.g. <h2 dialog-header> -->
+    <header class="dialog__header">
+      <ng-content select="[dialog-header]" />
+      <button
+        class="dialog__close"
+        [attr.aria-label]="'common.close' | translate"
+        (click)="onCloseClick()"
+        type="button"
+      >
+        <span class="icon-close" aria-hidden="true"></span>
+      </button>
+    </header>
+
+    <!-- Body slot — e.g. <p dialog-body> or <form dialog-body> -->
+    <div class="dialog__body">
+      <ng-content select="[dialog-body]" />
+    </div>
+
+    <!-- Footer slot — e.g. <footer dialog-footer> with action buttons -->
+    <footer class="dialog__footer">
+      <ng-content select="[dialog-footer]" />
+    </footer>
+  </div>
+</dialog>

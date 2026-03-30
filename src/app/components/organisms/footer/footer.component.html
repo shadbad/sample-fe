@@ -1,0 +1,10 @@
+<!-- Bottom-of-page content info landmark. role="contentinfo" is implicit on a
+     top-level <footer> but stated explicitly for deep component trees. -->
+<footer class="footer" role="contentinfo">
+  <!-- %wrapper inner container: max-width constraint + horizontal padding -->
+  <div class="footer__inner">
+    <p class="footer__copyright">
+      {{ 'footer.copyright' | translate: { year: currentYear } }}
+    </p>
+  </div>
+</footer>

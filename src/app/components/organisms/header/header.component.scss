@@ -1,0 +1,30 @@
+@use 'styles/general/common' as common;
+
+// #region Host / Layout
+:host {
+  display: block;
+}
+// #endregion Host / Layout
+
+// #region BEM — header
+.header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+  border-bottom: 0.0625rem solid var(--theme-border);
+  background-color: var(--theme-bg);
+  height: 3rem;
+
+  &__inner {
+    @include common.wrapper;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+  }
+}
+// #endregion BEM — header

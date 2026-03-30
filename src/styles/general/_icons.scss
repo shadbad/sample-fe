@@ -1,0 +1,71 @@
+$cache-buster: 'vu34fb';
+
+@font-face {
+  font-style: normal;
+  font-weight: normal;
+  src: url('/icons/icomoon.eot?#{$cache-buster}');
+  src:
+    url('/icons/icomoon.eot?#{$cache-buster}#iefix') format('embedded-opentype'),
+    url('/icons/icomoon.ttf?#{$cache-buster}') format('truetype'),
+    url('/icons/icomoon.woff?#{$cache-buster}') format('woff'),
+    url('/icons/icomoon.svg?#{$cache-buster}#icomoon') format('svg');
+  font-family: 'icomoon';
+  font-display: block;
+}
+
+[class^='icon-']::before,
+[class*=' icon-']::before {
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  font-family: 'icomoon' !important;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-error:before {
+  content: '\e900';
+}
+.icon-warning:before {
+  content: '\e903';
+}
+.icon-chevron-down:before {
+  content: '\e904';
+}
+.icon-chevron-left:before {
+  content: '\e906';
+}
+.icon-chevron-right:before {
+  content: '\e907';
+}
+.icon-chevron-up:before {
+  content: '\e908';
+}
+.icon-edit:before {
+  content: '\e909';
+}
+.icon-info:before {
+  content: '\e90a';
+}
+.icon-log-in:before {
+  content: '\e901';
+}
+.icon-log-out:before {
+  content: '\e902';
+}
+.icon-menu:before {
+  content: '\e90b';
+}
+.icon-search:before {
+  content: '\e90c';
+}
+.icon-trash:before {
+  content: '\e90d';
+}
+.icon-user:before {
+  content: '\e905';
+}
+.icon-close:before {
+  content: '\e90e';
+}

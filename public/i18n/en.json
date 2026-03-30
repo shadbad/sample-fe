@@ -1,0 +1,82 @@
+{
+  "common": {
+    "appName": "Sample App",
+    "loading": "Loading…",
+    "error": "An error occurred. Please try again.",
+    "retry": "Retry",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "search": "Search",
+    "noResults": "No results found.",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "app": {
+    "welcomeTitle": "Welcome to Sample FE!"
+  },
+  "header": {
+    "logoAriaLabel": "Go to home page",
+    "navAriaLabel": "Main navigation"
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "settings": "Settings",
+    "users": "Users",
+    "logout": "Log out"
+  },
+  "footer": {
+    "copyright": "© {{year}} Sample App. All rights reserved."
+  },
+  "auth": {
+    "logoutSuccess": "You have been logged out.",
+    "login": {
+      "title": "Log in",
+      "emailLabel": "Email address",
+      "passwordLabel": "Password",
+      "submitButton": "Log in",
+      "noAccount": "Don't have an account?"
+    },
+    "register": {
+      "title": "Create an account",
+      "fullNameLabel": "Full name",
+      "emailLabel": "Email address",
+      "passwordLabel": "Password",
+      "submitButton": "Create account",
+      "haveAccount": "Already have an account?"
+    },
+    "errors": {
+      "invalidCredentials": "Invalid email or password.",
+      "emailTaken": "This email address is already registered."
+    }
+  },
+  "errors": {
+    "required": "This field is required.",
+    "invalidEmail": "Please enter a valid email address.",
+    "minLength": "Minimum length is {{value}} characters.",
+    "maxLength": "Maximum length is {{value}} characters.",
+    "notFound": "The requested resource was not found.",
+    "serverError": "A server error occurred. Please try again later.",
+    "unauthorized": "You are not authorised to perform this action."
+  },
+  "a11y": {
+    "closeDialog": "Close dialog",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "loading": "Content is loading, please wait.",
+    "notificationsRegion": "Notifications"
+  },
+  "log": {
+    "genericError": "Something went wrong. Please try again.",
+    "networkError": "Could not reach the server.",
+    "sessionExpired": "Your session has expired. Please log in again.",
+    "staleCache": "Data may be out of date. Refreshing from server…"
+  }
+}
