@@ -2,7 +2,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
   computed,
   effect,
   inject,
@@ -57,7 +56,7 @@ export interface MemberFormSavePayload {
   styleUrl: './member-form-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MemberFormDialogComponent implements OnInit {
+export class MemberFormDialogComponent {
   // #region Dependencies
 
   readonly #fb = inject(FormBuilder);
@@ -118,26 +117,27 @@ export class MemberFormDialogComponent implements OnInit {
 
   // #endregion Form
 
-  // #region Lifecycle
+  // #region Effects
 
-  /** Wires the member input → form population effect. */
-  ngOnInit(): void {
-    // Populate or reset the form whenever the member input changes.
-    effect(() => {
-      const member = this.member();
-      if (member) {
-        this.form.setValue({
-          fullName: member.fullName,
-          email: member.email,
-          roleId: member.role?.id ?? null,
-        });
-      } else {
-        this.form.reset({ fullName: '', email: '', roleId: null });
-      }
-    });
-  }
+  /**
+   * Populates or resets the form whenever the `member` input signal changes.
+   * Declared as a field initializer to satisfy Angular's injection context requirement.
+   */
+  // eslint-disable-next-line no-unused-private-class-members
+  readonly #populateFormEffect = effect(() => {
+    const member = this.member();
+    if (member) {
+      this.form.setValue({
+        fullName: member.fullName,
+        email: member.email,
+        roleId: member.role?.id ?? null,
+      });
+    } else {
+      this.form.reset({ fullName: '', email: '', roleId: null });
+    }
+  });
 
-  // #endregion Lifecycle
+  // #endregion Effects
 
   // #region Handlers
 
