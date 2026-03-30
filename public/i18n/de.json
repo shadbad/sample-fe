@@ -66,6 +66,16 @@
     "serverError": "Ein Serverfehler ist aufgetreten. Bitte versuche es später erneut.",
     "unauthorized": "Du bist nicht berechtigt, diese Aktion durchzuführen."
   },
+  "paginate": {
+    "previous": "Zurück",
+    "next": "Weiter",
+    "navAriaLabel": "Seitennavigation",
+    "pageAriaLabel": "Seite {{page}}",
+    "currentPageAriaLabel": "Seite {{page}}, aktuell",
+    "sortAscAriaLabel": "{{column}} aufsteigend sortieren",
+    "sortDescAriaLabel": "{{column}} absteigend sortieren",
+    "resultsCount": "{{total}} Ergebnisse"
+  },
   "a11y": {
     "closeDialog": "Dialog schließen",
     "openMenu": "Menü öffnen",

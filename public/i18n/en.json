@@ -66,6 +66,16 @@
     "serverError": "A server error occurred. Please try again later.",
     "unauthorized": "You are not authorised to perform this action."
   },
+  "paginate": {
+    "previous": "Previous",
+    "next": "Next",
+    "navAriaLabel": "Pagination navigation",
+    "pageAriaLabel": "Page {{page}}",
+    "currentPageAriaLabel": "Page {{page}}, current",
+    "sortAscAriaLabel": "Sort {{column}} ascending",
+    "sortDescAriaLabel": "Sort {{column}} descending",
+    "resultsCount": "{{total}} results"
+  },
   "a11y": {
     "closeDialog": "Close dialog",
     "openMenu": "Open menu",
